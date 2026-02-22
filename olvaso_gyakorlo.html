@@ -25,9 +25,25 @@ h1{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,5vw,2.8rem);color:va
 .card{background:var(--card);border-radius:26px;padding:26px;width:100%;max-width:720px;
       box-shadow:0 24px 64px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05)}
 
-/* SETUP */
+/* LANGUAGE SELECTOR */
+.lang-section{margin-bottom:20px}
 .lbl{font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;
-     color:var(--accent);margin-bottom:8px;display:block}
+     color:var(--accent);margin-bottom:10px;display:block}
+.lang-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.lang-btn{
+  background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:10px 6px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  transition:border-color .2s,background .2s,transform .15s;
+  color:var(--text);
+}
+.lang-btn:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
+.lang-btn.active{border-color:var(--accent);background:rgba(247,201,72,.12)}
+.lang-flag{font-size:1.6rem;line-height:1}
+.lang-name{font-size:.75rem;font-weight:700;color:var(--muted)}
+.lang-btn.active .lang-name{color:var(--accent)}
+
+/* SETUP */
 textarea{width:100%;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);
          border-radius:14px;padding:14px;color:var(--text);font-family:'Nunito',sans-serif;
          font-size:1rem;resize:vertical;outline:none;min-height:110px;transition:border-color .2s}
@@ -44,7 +60,7 @@ textarea:focus{border-color:var(--accent)}
 .sent-preview{margin-top:14px;display:none}
 .sent-preview.show{display:block}
 .sent-count{font-size:.82rem;color:var(--teal);margin-bottom:8px;font-weight:700}
-.sent-list{max-height:130px;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
+.sent-list{max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
 .sent-item{background:rgba(255,255,255,.04);border-radius:8px;padding:6px 11px;
            font-size:.83rem;color:var(--muted);border-left:3px solid rgba(255,255,255,.1);
            white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -60,86 +76,71 @@ textarea:focus{border-color:var(--accent)}
 .sp-dots{display:flex;gap:5px;flex-wrap:wrap}
 .sp-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all .3s}
 .sp-dot.done{background:var(--green)}.sp-dot.active{background:var(--accent);transform:scale(1.4)}
+
+/* Active language badge */
+.lang-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(247,201,72,.1);
+            border:1px solid rgba(247,201,72,.25);border-radius:999px;
+            padding:3px 10px;font-size:.78rem;color:var(--accent);font-weight:700;margin-left:auto}
+
 .lhdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .dot{width:13px;height:13px;border-radius:50%;background:var(--muted);transition:all .3s;flex-shrink:0}
 .dot.active{background:var(--accent);transform:scale(1.5)}.dot.done{background:var(--green)}
-.lname{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--teal)}
+.lname{font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--teal)}
 .instr{font-size:.84rem;color:var(--muted);line-height:1.6;
        background:rgba(255,255,255,.04);border-radius:10px;padding:9px 13px;margin-bottom:12px}
 
 /* KARAOKE */
-.karaoke-wrap{
-  background:rgba(255,255,255,.04);border-radius:18px;
-  padding:22px 20px;margin:10px 0;
-  font-size:1.28rem;font-weight:700;line-height:2.2;
-  text-align:center;word-break:break-word;
-  min-height:80px;position:relative;transition:background .5s;
-}
+.karaoke-wrap{background:rgba(255,255,255,.04);border-radius:18px;
+  padding:22px 20px;margin:10px 0;font-size:1.28rem;font-weight:700;line-height:2.2;
+  text-align:center;word-break:break-word;min-height:80px;position:relative;transition:background .5s}
 .karaoke-wrap.flash{animation:flash .8s ease}
 @keyframes flash{40%{background:rgba(107,203,119,.22)}}
 .ghost-text{position:absolute;inset:0;border-radius:18px;padding:22px 20px;pointer-events:none;
   font-size:1.28rem;font-weight:700;line-height:2.2;text-align:center;
-  color:rgba(240,240,248,.11);opacity:0;transition:opacity 1.4s;word-break:break-word;}
+  color:rgba(240,240,248,.11);opacity:0;transition:opacity 1.4s;word-break:break-word}
 .ghost-text.show{opacity:1}
 
 .kw{display:inline;white-space:pre-wrap;transition:color .15s,text-shadow .15s}
 .kw.done{color:var(--accent)}
 .kw.cur{color:var(--pink);text-shadow:0 0 18px rgba(255,107,157,.75);animation:kpulse .9s ease-in-out infinite}
 .kw.todo{color:rgba(240,240,248,.25)}
-/* interim highlight – word being spoken right now */
 .kw.interim{color:#fff;text-shadow:0 0 20px rgba(255,255,255,.6);animation:none}
-
-.kw.blank{color:transparent;background:rgba(255,255,255,.1);border-radius:5px;
-          border-bottom:2px solid rgba(255,255,255,.22);padding:0 3px}
-.kw.blank.cur{color:transparent;background:rgba(255,107,157,.18);
-              border-bottom:2px solid var(--pink);text-shadow:none;animation:kpulse .9s ease-in-out infinite}
+.kw.blank{color:transparent;background:rgba(255,255,255,.1);border-radius:5px;border-bottom:2px solid rgba(255,255,255,.22);padding:0 3px}
+.kw.blank.cur{color:transparent;background:rgba(255,107,157,.18);border-bottom:2px solid var(--pink);text-shadow:none;animation:kpulse .9s ease-in-out infinite}
 .kw.blank.interim{color:var(--text);background:rgba(255,255,255,.2);border-bottom:2px solid #fff;animation:none}
 .kw.blank.done{color:var(--accent);background:rgba(247,201,72,.13);border-bottom:2px solid var(--accent)}
-.kw.blank.hint-show{color:var(--orange)!important;background:rgba(255,170,0,.15)!important;
-                    border-bottom:2px solid var(--orange)!important;text-shadow:0 0 12px rgba(255,170,0,.4)}
-
+.kw.blank.hint-show{color:var(--orange)!important;background:rgba(255,170,0,.15)!important;border-bottom:2px solid var(--orange)!important}
 .kw.hidden{color:transparent}
 .kw.revealed{color:var(--green)}
 .kw.cur-l3{color:var(--pink);text-shadow:0 0 18px rgba(255,107,157,.75);animation:kpulse .9s ease-in-out infinite}
 .kw.cur-l3.interim{color:#fff;text-shadow:0 0 20px rgba(255,255,255,.6);animation:none}
 .kw.hint-show{color:var(--orange)!important;text-shadow:0 0 12px rgba(255,170,0,.4)!important;animation:none!important}
-
 @keyframes kpulse{0%,100%{text-shadow:0 0 8px rgba(255,107,157,.6)}50%{text-shadow:0 0 26px rgba(255,107,157,.95)}}
 
-/* progress */
 .prog{background:rgba(255,255,255,.07);border-radius:999px;height:8px;overflow:hidden;margin:0 0 10px}
 .pfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--accent));width:0;transition:width .3s ease}
 
-/* mic status bar */
-.mic-status-wrap{
-  display:flex;align-items:center;gap:10px;
-  background:rgba(255,255,255,.04);border-radius:12px;
-  padding:8px 14px;margin-bottom:10px;min-height:40px;
-}
+.mic-status-wrap{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);
+  border-radius:12px;padding:8px 14px;margin-bottom:10px;min-height:40px}
 .mic-wave{display:flex;gap:3px;align-items:center;flex-shrink:0}
-.mic-wave span{display:block;width:3px;background:var(--teal);border-radius:99px;
-               height:8px;animation:none;opacity:.3}
+.mic-wave span{display:block;width:3px;background:var(--teal);border-radius:99px;height:8px;animation:none;opacity:.3}
 .mic-wave.active span{opacity:1}
-.mic-wave.active span:nth-child(1){animation:wave 0.8s ease-in-out infinite 0.0s}
-.mic-wave.active span:nth-child(2){animation:wave 0.8s ease-in-out infinite 0.15s}
-.mic-wave.active span:nth-child(3){animation:wave 0.8s ease-in-out infinite 0.3s}
-.mic-wave.active span:nth-child(4){animation:wave 0.8s ease-in-out infinite 0.45s}
-.mic-wave.active span:nth-child(5){animation:wave 0.8s ease-in-out infinite 0.6s}
+.mic-wave.active span:nth-child(1){animation:wave .8s ease-in-out infinite 0.0s}
+.mic-wave.active span:nth-child(2){animation:wave .8s ease-in-out infinite .15s}
+.mic-wave.active span:nth-child(3){animation:wave .8s ease-in-out infinite .3s}
+.mic-wave.active span:nth-child(4){animation:wave .8s ease-in-out infinite .45s}
+.mic-wave.active span:nth-child(5){animation:wave .8s ease-in-out infinite .6s}
 @keyframes wave{0%,100%{height:4px}50%{height:18px}}
-.mic-status-text{font-size:.84rem;color:var(--teal);font-style:italic;flex:1;
-                 overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mic-status-text{font-size:.84rem;color:var(--teal);font-style:italic;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mic-status-text.idle{color:var(--muted);font-style:normal}
 
-/* mic button */
 .mic-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:6px 0 4px}
 #micBtn{width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;font-size:1.9rem;
         display:flex;align-items:center;justify-content:center;
         background:linear-gradient(135deg,var(--pink),#c23a7d);
-        box-shadow:0 4px 22px rgba(255,107,157,.4);transition:transform .15s,box-shadow .15s}
+        box-shadow:0 4px 22px rgba(255,107,157,.4);transition:transform .15s}
 #micBtn:hover{transform:scale(1.08)}
-#micBtn.rec{background:linear-gradient(135deg,#ff3d3d,#b81a1a);
-            box-shadow:0 0 0 0 rgba(255,61,61,.55);
-            animation:mpulse 1s ease-in-out infinite}
+#micBtn.rec{background:linear-gradient(135deg,#ff3d3d,#b81a1a);animation:mpulse 1s ease-in-out infinite}
 @keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,61,61,.55)}50%{box-shadow:0 0 0 18px rgba(255,61,61,0)}}
 .mlbl{font-size:.84rem;color:var(--muted);text-align:center}
 .mlbl.rec{color:var(--teal);font-weight:700}
@@ -180,32 +181,59 @@ textarea:focus{border-color:var(--accent)}
 <body>
 
 <h1>📖 Olvasás Gyakorló</h1>
-<p class="sub">Tanulj meg szöveget fejből – mondatról mondatra</p>
+<p class="sub" id="appSub">Tanulj meg szöveget fejből – mondatról mondatra</p>
 
 <div class="card">
 
   <!-- SETUP -->
   <div id="sSetup">
-    <span class="lbl">Írd be vagy illeszd be a szöveget:</span>
-    <textarea id="sinput" placeholder="Ide írj több mondatot. Minden mondatot külön kezeljük!&#10;&#10;Pl.: A Nap süt. Szép idő van. A madarak énekelnek."></textarea>
+    <!-- Language selector -->
+    <div class="lang-section">
+      <span class="lbl" id="lblLang">Válassz nyelvet:</span>
+      <div class="lang-grid">
+        <button class="lang-btn active" onclick="setLang('hu')" id="langHU">
+          <span class="lang-flag">🇭🇺</span>
+          <span class="lang-name">Magyar</span>
+        </button>
+        <button class="lang-btn" onclick="setLang('en')" id="langEN">
+          <span class="lang-flag">🇬🇧</span>
+          <span class="lang-name">English</span>
+        </button>
+        <button class="lang-btn" onclick="setLang('de')" id="langDE">
+          <span class="lang-flag">🇩🇪</span>
+          <span class="lang-name">Deutsch</span>
+        </button>
+        <button class="lang-btn" onclick="setLang('es')" id="langES">
+          <span class="lang-flag">🇪🇸</span>
+          <span class="lang-name">Español</span>
+        </button>
+      </div>
+    </div>
+
+    <span class="lbl" id="lblText">Írd be vagy illeszd be a szöveget:</span>
+    <textarea id="sinput" placeholder="Ide írj több mondatot..."></textarea>
+
     <div class="upload-area" onclick="document.getElementById('fileInput').click()">
       <input type="file" id="fileInput" accept=".txt,.md" onchange="loadFile(event)">
       <div class="upload-icon">📄</div>
-      <div class="upload-label">Kattints a <span>fájl feltöltéséhez</span> (.txt)</div>
+      <div class="upload-label" id="uploadLabel">Kattints a <span>fájl feltöltéséhez</span> (.txt)</div>
       <div class="file-name" id="fileName"></div>
     </div>
+
     <div class="sent-preview" id="sentPreview">
       <div class="sent-count" id="sentCount"></div>
       <div class="sent-list" id="sentList"></div>
     </div>
-    <button class="big" id="startBtn" onclick="startPractice()" disabled>🚀 Kezdjük el!</button>
+
+    <button class="big" id="startBtn" onclick="startPractice()" disabled id="startBtn">🚀 Kezdjük el!</button>
   </div>
 
   <!-- LEVEL -->
   <div id="sLevel" class="hidden">
     <div class="sent-progress">
-      <span class="sp-label">Mondatok:</span>
+      <span class="sp-label" id="spLabel">Mondatok:</span>
       <div class="sp-dots" id="spDots"></div>
+      <span class="lang-badge" id="activeLangBadge"></span>
     </div>
     <div class="lhdr">
       <div class="dot" id="d1"></div>
@@ -224,60 +252,238 @@ textarea:focus{border-color:var(--accent)}
 
     <div class="prog"><div class="pfill" id="pfill"></div></div>
 
-    <!-- Live mic status bar -->
     <div class="mic-status-wrap">
       <div class="mic-wave" id="micWave">
         <span></span><span></span><span></span><span></span><span></span>
       </div>
-      <div class="mic-status-text idle" id="micStatusText">Nyomd meg a mikrofont a kezdéshez</div>
+      <div class="mic-status-text idle" id="micStatusText"></div>
     </div>
 
     <div class="mic-wrap">
       <button id="micBtn" onclick="toggleMic()">🎤</button>
-      <span class="mlbl" id="mlbl">Nyomd meg, majd olvasd fel a mondatot!</span>
+      <span class="mlbl" id="mlbl"></span>
     </div>
 
     <div class="res" id="resBox">
       <div class="ri" id="rIcon">🌟</div>
       <div class="rm" id="rMsg"></div>
       <div class="brow">
-        <button class="bsec" onclick="retry()">🔄 Újra próbálom</button>
+        <button class="bsec" id="retryBtn" onclick="retry()"></button>
         <button class="bpri" id="nextBtn" onclick="nextAction()"></button>
       </div>
     </div>
     <div class="mt">
-      <button class="bsec" id="retrySmall" onclick="retry()">🔄 Újrakezdem a szintet</button>
+      <button class="bsec" id="retrySmall" onclick="retry()"></button>
     </div>
   </div>
 
   <!-- ALL DONE -->
   <div id="sDone" class="hidden alldone">
     <span class="trophy">🏆</span>
-    <div class="rm" style="font-size:2rem">Minden mondat kész!</div>
-    <p>Fantasztikus! Az egész szöveget megtanultad fejből! 🎉</p>
-    <button class="big" onclick="resetAll()">🔁 Új szöveg</button>
+    <div class="rm" id="doneTitle" style="font-size:2rem"></div>
+    <p id="doneMsg" style="color:var(--muted);margin-bottom:22px"></p>
+    <button class="big" id="newTextBtn" onclick="resetAll()"></button>
   </div>
 
 </div>
 
 <script>
+// ── LANGUAGES ──────────────────────────────────────────────────────
+const LANGS = {
+  hu: {
+    code: 'hu-HU', flag: '🇭🇺', name: 'Magyar',
+    ui: {
+      sub: 'Tanulj meg szöveget fejből – mondatról mondatra',
+      lblLang: 'Válassz nyelvet:',
+      lblText: 'Írd be vagy illeszd be a szöveget:',
+      placeholder: 'Ide írj több mondatot. Minden mondatot külön kezeljük!\n\nPl.: A Nap süt. Szép idő van.',
+      uploadLabel: 'Kattints a <span>fájl feltöltéséhez</span> (.txt)',
+      startBtn: '🚀 Kezdjük el!',
+      spLabel: 'Mondatok:',
+      lvl: ['1. szint: Olvasás','2. szint: Szavak nélkül','3. szint: Fejből!'],
+      instr: [
+        '📖 Látod a szöveget – olvasd fel hangosan! Amit kimondasz, azonnal sárgává válik.',
+        '🧩 Néhány szó el van takarva – emlékezz rájuk! Amit kimondasz, megjelenik.',
+        '🧠 Üres képernyő – mondd fejből! A szavak ahogy mondod, fokozatosan megjelennek.'
+      ],
+      micIdle: 'Nyomd meg a mikrofont a kezdéshez',
+      micListening: '🎤 Hallgatlak…',
+      micLabel: 'Nyomd meg, majd olvasd fel!',
+      micRecLabel: '🔴 Felvétel – olvasd fel!',
+      done: '✅ Kész!',
+      hintL2: '💡 A helyes szó narancsszínnel látható!',
+      hintL3: '💡 A következő szó narancsszínnel jelenik meg!',
+      successL1: 'Remek! Szint teljesítve!',
+      successL2: 'Szuper! Tovább!',
+      successL3last: 'Brávó! Az egész szöveg kész!',
+      successL3next: 'Brávó! Következő mondat!',
+      nextLevel: '➡️ Következő szint',
+      nextSent: '➡️ Következő mondat',
+      finish: '🏆 Befejezés',
+      retry: '🔄 Újra próbálom',
+      retrySmall: '🔄 Újrakezdem a szintet',
+      doneTitle: 'Minden mondat kész!',
+      doneMsg: 'Fantasztikus! Az egész szöveget megtanultad fejből! 🎉',
+      newText: '🔁 Új szöveg',
+      sentCount: (n) => n+' mondat:',
+      errMic: '⚠️ Mikrofon hozzáférés megtagadva! Engedélyezd a böngészőben.',
+      errBrowser: '⚠️ A böngésző nem támogatja a hangfelismerést. Használj Chrome-ot!',
+    }
+  },
+  en: {
+    code: 'en-US', flag: '🇬🇧', name: 'English',
+    ui: {
+      sub: 'Learn text by heart – sentence by sentence',
+      lblLang: 'Choose language:',
+      lblText: 'Type or paste your text:',
+      placeholder: 'Type multiple sentences here. Each sentence is practiced separately!\n\nE.g.: The sun shines. It is a nice day.',
+      uploadLabel: 'Click to <span>upload a file</span> (.txt)',
+      startBtn: '🚀 Let\'s start!',
+      spLabel: 'Sentences:',
+      lvl: ['Level 1: Reading','Level 2: Missing words','Level 3: From memory!'],
+      instr: [
+        '📖 You can see the text – read it aloud! Words turn yellow as you say them.',
+        '🧩 Some words are hidden – remember them! They appear as you say them.',
+        '🧠 Blank screen – say it from memory! Words appear gradually as you speak.'
+      ],
+      micIdle: 'Press the microphone to start',
+      micListening: '🎤 Listening…',
+      micLabel: 'Press, then read the sentence!',
+      micRecLabel: '🔴 Recording – read aloud!',
+      done: '✅ Done!',
+      hintL2: '💡 The correct word is shown in orange!',
+      hintL3: '💡 The next word is shown in orange!',
+      successL1: 'Great! Level complete!',
+      successL2: 'Awesome! Keep going!',
+      successL3last: 'Bravo! All text complete!',
+      successL3next: 'Bravo! Next sentence!',
+      nextLevel: '➡️ Next level',
+      nextSent: '➡️ Next sentence',
+      finish: '🏆 Finish',
+      retry: '🔄 Try again',
+      retrySmall: '🔄 Restart level',
+      doneTitle: 'All sentences done!',
+      doneMsg: 'Fantastic! You learned the entire text by heart! 🎉',
+      newText: '🔁 New text',
+      sentCount: (n) => n+' sentences:',
+      errMic: '⚠️ Microphone access denied! Allow it in your browser.',
+      errBrowser: '⚠️ Your browser does not support speech recognition. Use Chrome!',
+    }
+  },
+  de: {
+    code: 'de-DE', flag: '🇩🇪', name: 'Deutsch',
+    ui: {
+      sub: 'Lerne Texte auswendig – Satz für Satz',
+      lblLang: 'Sprache wählen:',
+      lblText: 'Text eingeben oder einfügen:',
+      placeholder: 'Schreibe mehrere Sätze hierher. Jeder Satz wird einzeln geübt!\n\nZ.B.: Die Sonne scheint. Es ist ein schöner Tag.',
+      uploadLabel: 'Klicke zum <span>Hochladen</span> (.txt)',
+      startBtn: '🚀 Los geht\'s!',
+      spLabel: 'Sätze:',
+      lvl: ['Stufe 1: Lesen','Stufe 2: Fehlende Wörter','Stufe 3: Auswendig!'],
+      instr: [
+        '📖 Du siehst den Text – lies ihn laut vor! Gesprochene Wörter werden gelb.',
+        '🧩 Einige Wörter sind verdeckt – erinnere dich! Sie erscheinen beim Sprechen.',
+        '🧠 Leerer Bildschirm – sprich auswendig! Wörter erscheinen nach und nach.'
+      ],
+      micIdle: 'Drücke das Mikrofon zum Starten',
+      micListening: '🎤 Ich höre zu…',
+      micLabel: 'Drücken, dann laut vorlesen!',
+      micRecLabel: '🔴 Aufnahme – lies vor!',
+      done: '✅ Fertig!',
+      hintL2: '💡 Das richtige Wort ist orange markiert!',
+      hintL3: '💡 Das nächste Wort erscheint orange!',
+      successL1: 'Super! Stufe geschafft!',
+      successL2: 'Toll! Weiter so!',
+      successL3last: 'Bravo! Gesamter Text geschafft!',
+      successL3next: 'Bravo! Nächster Satz!',
+      nextLevel: '➡️ Nächste Stufe',
+      nextSent: '➡️ Nächster Satz',
+      finish: '🏆 Abschluss',
+      retry: '🔄 Nochmal versuchen',
+      retrySmall: '🔄 Stufe neu starten',
+      doneTitle: 'Alle Sätze fertig!',
+      doneMsg: 'Fantastisch! Du hast den gesamten Text auswendig gelernt! 🎉',
+      newText: '🔁 Neuer Text',
+      sentCount: (n) => n+' Sätze:',
+      errMic: '⚠️ Mikrofonzugriff verweigert! Erlaube ihn im Browser.',
+      errBrowser: '⚠️ Dein Browser unterstützt keine Spracherkennung. Nutze Chrome!',
+    }
+  },
+  es: {
+    code: 'es-ES', flag: '🇪🇸', name: 'Español',
+    ui: {
+      sub: 'Aprende textos de memoria – frase por frase',
+      lblLang: 'Elige el idioma:',
+      lblText: 'Escribe o pega el texto:',
+      placeholder: 'Escribe varias frases aquí. ¡Cada frase se practica por separado!\n\nEj.: El sol brilla. Hace buen tiempo.',
+      uploadLabel: 'Haz clic para <span>subir un archivo</span> (.txt)',
+      startBtn: '🚀 ¡Empezamos!',
+      spLabel: 'Frases:',
+      lvl: ['Nivel 1: Lectura','Nivel 2: Palabras ocultas','Nivel 3: ¡De memoria!'],
+      instr: [
+        '📖 Ves el texto – ¡léelo en voz alta! Las palabras se vuelven amarillas al hablar.',
+        '🧩 Algunas palabras están ocultas – ¡recuérdalas! Aparecen al pronunciarlas.',
+        '🧠 Pantalla en blanco – ¡dilo de memoria! Las palabras aparecen gradualmente.'
+      ],
+      micIdle: 'Pulsa el micrófono para empezar',
+      micListening: '🎤 Escuchando…',
+      micLabel: '¡Pulsa y lee la frase en voz alta!',
+      micRecLabel: '🔴 Grabando – ¡lee en voz alta!',
+      done: '✅ ¡Listo!',
+      hintL2: '💡 ¡La palabra correcta aparece en naranja!',
+      hintL3: '💡 ¡La siguiente palabra aparece en naranja!',
+      successL1: '¡Genial! ¡Nivel completado!',
+      successL2: '¡Estupendo! ¡Sigue así!',
+      successL3last: '¡Bravo! ¡Todo el texto completado!',
+      successL3next: '¡Bravo! ¡Siguiente frase!',
+      nextLevel: '➡️ Siguiente nivel',
+      nextSent: '➡️ Siguiente frase',
+      finish: '🏆 Finalizar',
+      retry: '🔄 Intentar de nuevo',
+      retrySmall: '🔄 Reiniciar nivel',
+      doneTitle: '¡Todas las frases completadas!',
+      doneMsg: '¡Fantástico! ¡Has aprendido todo el texto de memoria! 🎉',
+      newText: '🔁 Nuevo texto',
+      sentCount: (n) => n+' frases:',
+      errMic: '⚠️ ¡Acceso al micrófono denegado! Permítelo en el navegador.',
+      errBrowser: '⚠️ Tu navegador no soporta reconocimiento de voz. ¡Usa Chrome!',
+    }
+  }
+};
+
 // ── STATE ──────────────────────────────────────────────────────────
+let currentLang = 'hu';
 let sentences=[], sentIdx=0, words=[], level=1, wordIdx=0, attempts=0;
 let hintShown=false, ghostVis=false, finished=false;
 let recognition=null, isRec=false;
-let hintWords=new Set();
+let hintWords=new Set(), interimWordIdx=-1;
 
-// interimWordIdx: how far we think user is based on INTERIM results (for live highlight)
-let interimWordIdx = -1;
+function L(){ return LANGS[currentLang].ui; }
 
-const BLANK=3;
-function blankSet(){const s=new Set();for(let i=BLANK-1;i<words.length;i+=BLANK)s.add(i);return s;}
+// ── LANGUAGE ───────────────────────────────────────────────────────
+function setLang(code){
+  currentLang = code;
+  // Update button states
+  ['hu','en','de','es'].forEach(l=>{
+    document.getElementById('lang'+l.toUpperCase()).classList.toggle('active', l===code);
+  });
+  applyUIStrings();
+  // Re-parse if there's text
+  const text = document.getElementById('sinput').value.trim();
+  if(text){ sentences=parseSentences(text); updatePreview(); }
+}
 
-const LVL={
-  1:{name:'1. szint: Olvasás',      instr:'📖 Látod a szöveget – olvasd fel hangosan! Amit kimondasz, azonnal sárgává válik.'},
-  2:{name:'2. szint: Szavak nélkül', instr:'🧩 Néhány szó el van takarva – emlékezz rájuk! Amit kimondasz, megjelenik.'},
-  3:{name:'3. szint: Fejből!',       instr:'🧠 Üres képernyő – mondd fejből! A szavak ahogy mondod, fokozatosan megjelennek.'},
-};
+function applyUIStrings(){
+  const u = L();
+  document.getElementById('appSub').textContent = u.sub;
+  document.getElementById('lblLang').textContent = u.lblLang;
+  document.getElementById('lblText').textContent = u.lblText;
+  document.getElementById('sinput').placeholder = u.placeholder;
+  document.getElementById('uploadLabel').innerHTML = u.uploadLabel;
+  document.getElementById('startBtn').textContent = u.startBtn;
+  document.getElementById('micStatusText').textContent = u.micIdle;
+}
 
 // ── SETUP ──────────────────────────────────────────────────────────
 function parseSentences(text){
@@ -285,7 +491,7 @@ function parseSentences(text){
   text.replace(/\r\n/g,'\n').split('\n').map(l=>l.trim()).filter(l=>l.length>1).forEach(line=>{
     const parts=line.match(/[^.!?]+[.!?]+|[^.!?]+$/g);
     if(parts) parts.forEach(p=>{const t=p.trim();if(t.length>1)result.push(t);});
-    else result.push(line);
+    else if(line.trim().length>1) result.push(line.trim());
   });
   return result;
 }
@@ -299,8 +505,10 @@ function loadFile(e){
   const file=e.target.files[0]; if(!file) return;
   document.getElementById('fileName').textContent='📎 '+file.name;
   const r=new FileReader();
-  r.onload=ev=>{document.getElementById('sinput').value=ev.target.result;
-    sentences=parseSentences(ev.target.result);updatePreview();};
+  r.onload=ev=>{
+    document.getElementById('sinput').value=ev.target.result;
+    sentences=parseSentences(ev.target.result);updatePreview();
+  };
   r.readAsText(file,'UTF-8');
 }
 
@@ -309,7 +517,7 @@ function updatePreview(){
   document.getElementById('sentPreview').classList.toggle('show',ok);
   document.getElementById('startBtn').disabled=!ok;
   if(!ok) return;
-  document.getElementById('sentCount').textContent=sentences.length+' mondat:';
+  document.getElementById('sentCount').textContent = L().sentCount(sentences.length);
   const list=document.getElementById('sentList');
   list.innerHTML='';
   sentences.forEach((s,i)=>{
@@ -322,19 +530,28 @@ function showScreen(id){
   ['sSetup','sLevel','sDone'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));
 }
 
-function startPractice(){if(!sentences.length)return;sentIdx=0;level=1;attempts=0;
-  showScreen('sLevel');buildSentDots();loadSentence();}
+function startPractice(){
+  if(!sentences.length) return;
+  sentIdx=0;level=1;attempts=0;
+  showScreen('sLevel');
+  buildSentDots();loadSentence();
+}
+
 function resetAll(){stopRec();showScreen('sSetup');}
 
 function buildSentDots(){
   const w=document.getElementById('spDots');w.innerHTML='';
-  sentences.forEach((_,i)=>{const d=document.createElement('div');
+  sentences.forEach((_,i)=>{
+    const d=document.createElement('div');
     d.className='sp-dot'+(i===sentIdx?' active':i<sentIdx?' done':'');
-    d.id='sp-'+i;w.appendChild(d);});
+    d.id='sp-'+i;w.appendChild(d);
+  });
 }
 function updateSentDots(){
-  sentences.forEach((_,i)=>{const d=document.getElementById('sp-'+i);
-    if(d) d.className='sp-dot'+(i===sentIdx?' active':i<sentIdx?' done':'');});
+  sentences.forEach((_,i)=>{
+    const d=document.getElementById('sp-'+i);
+    if(d) d.className='sp-dot'+(i===sentIdx?' active':i<sentIdx?' done':'');
+  });
 }
 
 function loadSentence(){
@@ -345,9 +562,13 @@ function loadSentence(){
 }
 
 // ── LEVEL SETUP ────────────────────────────────────────────────────
+const BLANK=3;
+function blankSet(){const s=new Set();for(let i=BLANK-1;i<words.length;i+=BLANK)s.add(i);return s;}
+
 function setupLevel(){
   wordIdx=0;finished=false;hintWords=new Set();interimWordIdx=-1;
   attempts++;
+  const u=L();
   document.getElementById('resBox').classList.remove('on');
   document.getElementById('retrySmall').classList.remove('hidden');
   document.getElementById('hintBox').classList.remove('on');
@@ -356,191 +577,162 @@ function setupLevel(){
   document.getElementById('ghostText').classList.remove('show');
   document.getElementById('ghostText').textContent='';
   document.getElementById('karaokeWrap').classList.remove('flash');
-  setMicStatus('idle','Nyomd meg a mikrofont a kezdéshez');
+  setMicStatus('idle', u.micIdle);
   stopRec();
+
   for(let i=1;i<=3;i++) document.getElementById('d'+i).className='dot'+(i<level?' done':i===level?' active':'');
-  document.getElementById('lname').textContent=LVL[level].name;
-  document.getElementById('instr').textContent=LVL[level].instr;
+  document.getElementById('lname').textContent = u.lvl[level-1];
+  document.getElementById('instr').textContent = u.instr[level-1];
+  document.getElementById('spLabel').textContent = u.spLabel;
+
+  const lang = LANGS[currentLang];
+  document.getElementById('activeLangBadge').textContent = lang.flag+' '+lang.name;
+
   const isLast=sentIdx>=sentences.length-1;
-  document.getElementById('nextBtn').textContent=level<3?'➡️ Következő szint':(isLast?'🏆 Befejezés':'➡️ Következő mondat');
+  document.getElementById('nextBtn').textContent = level<3 ? u.nextLevel : (isLast ? u.finish : u.nextSent);
+  document.getElementById('retryBtn').textContent = u.retry;
+  document.getElementById('retrySmall').textContent = u.retrySmall;
+  document.getElementById('mlbl').textContent = u.micLabel;
+
   if(level===3) document.getElementById('ghostText').textContent=sentences[sentIdx];
   renderKaraoke();
 }
 
-// ── MIC STATUS ─────────────────────────────────────────────────────
-function setMicStatus(type, text){
-  const el=document.getElementById('micStatusText');
-  const wave=document.getElementById('micWave');
-  el.textContent=text;
-  el.className='mic-status-text'+(type==='idle'?' idle':'');
-  wave.classList.toggle('active', type==='listening'||type==='interim');
-}
-
-// ── RENDER KARAOKE ─────────────────────────────────────────────────
+// ── RENDER ─────────────────────────────────────────────────────────
 function renderKaraoke(){
   const container=document.getElementById('karaokeText');
   container.innerHTML='';
   const bl=blankSet();
-
   words.forEach((w,i)=>{
     const sp=document.createElement('span');
     const isHint=hintWords.has(i);
-    // interimIdx: word currently being spoken (live preview)
-    const isInterim=(i===interimWordIdx && i>=wordIdx);
-
+    const isInterim=(i===interimWordIdx&&i>=wordIdx);
     if(level===1){
-      if(i<wordIdx)        { sp.className='kw done'; sp.textContent=w; }
-      else if(i===wordIdx) { sp.className='kw cur'+(isInterim?' interim':''); sp.textContent=w; }
-      else                 { sp.className='kw todo'; sp.textContent=w; }
-    }
-    else if(level===2){
+      if(i<wordIdx)        {sp.className='kw done';sp.textContent=w;}
+      else if(i===wordIdx) {sp.className='kw cur'+(isInterim?' interim':'');sp.textContent=w;}
+      else                 {sp.className='kw todo';sp.textContent=w;}
+    } else if(level===2){
       if(bl.has(i)){
-        if(i<wordIdx)        { sp.className='kw blank done'; sp.textContent=w; }
+        if(i<wordIdx)        {sp.className='kw blank done';sp.textContent=w;}
         else if(i===wordIdx) {
-          if(isHint)          { sp.className='kw blank hint-show'; sp.textContent=w; }
-          else if(isInterim)  { sp.className='kw blank interim'; sp.textContent=w; }
-          else                { sp.className='kw blank cur'; sp.textContent=w; }
-        }
-        else {
-          if(isHint)          { sp.className='kw blank hint-show'; sp.textContent=w; }
-          else                { sp.className='kw blank'; sp.textContent=w; }
+          if(isHint)         {sp.className='kw blank hint-show';sp.textContent=w;}
+          else if(isInterim) {sp.className='kw blank interim';sp.textContent=w;}
+          else               {sp.className='kw blank cur';sp.textContent=w;}
+        } else {
+          if(isHint)         {sp.className='kw blank hint-show';sp.textContent=w;}
+          else               {sp.className='kw blank';sp.textContent=w;}
         }
       } else {
-        if(i<wordIdx)        { sp.className='kw done'; sp.textContent=w; }
-        else if(i===wordIdx) { sp.className='kw cur'+(isInterim?' interim':''); sp.textContent=w; }
-        else                 { sp.className='kw todo'; sp.textContent=w; }
+        if(i<wordIdx)        {sp.className='kw done';sp.textContent=w;}
+        else if(i===wordIdx) {sp.className='kw cur'+(isInterim?' interim':'');sp.textContent=w;}
+        else                 {sp.className='kw todo';sp.textContent=w;}
       }
-    }
-    else { // level 3
-      if(i<wordIdx)        { sp.className='kw revealed'; sp.textContent=w; }
+    } else {
+      if(i<wordIdx)        {sp.className='kw revealed';sp.textContent=w;}
       else if(i===wordIdx) {
-        if(isHint)          { sp.className='kw hint-show'; sp.textContent=w; }
-        else if(isInterim)  { sp.className='kw cur-l3 interim'; sp.textContent=w; }
-        else                { sp.className='kw cur-l3'; sp.textContent='▮'; }
-      }
-      else {
-        if(isHint)          { sp.className='kw hint-show'; sp.textContent=w; }
-        else                { sp.className='kw hidden'; sp.textContent=w; }
+        if(isHint)         {sp.className='kw hint-show';sp.textContent=w;}
+        else if(isInterim) {sp.className='kw cur-l3 interim';sp.textContent=w;}
+        else               {sp.className='kw cur-l3';sp.textContent='▮';}
+      } else {
+        if(isHint)         {sp.className='kw hint-show';sp.textContent=w;}
+        else               {sp.className='kw hidden';sp.textContent=w;}
       }
     }
-
     if(i<words.length-1) sp.textContent+=' ';
     container.appendChild(sp);
   });
-
   if(level===3&&ghostVis) document.getElementById('ghostText').classList.add('show');
 }
 
+// ── MIC STATUS ─────────────────────────────────────────────────────
+function setMicStatus(type,text){
+  document.getElementById('micStatusText').textContent=text;
+  document.getElementById('micStatusText').className='mic-status-text'+(type==='idle'?' idle':'');
+  document.getElementById('micWave').classList.toggle('active',type!=='idle');
+}
+
 // ── MICROPHONE ─────────────────────────────────────────────────────
-function toggleMic(){if(isRec) stopRec(); else startRec();}
+function toggleMic(){if(isRec)stopRec();else startRec();}
+
+function makeRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR) return null;
+  const rec=new SR();
+  rec.lang=LANGS[currentLang].code;
+  rec.continuous=true;
+  rec.interimResults=true;
+  rec.maxAlternatives=3;
+  return rec;
+}
 
 function startRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){showErr('A böngésző nem támogatja a hangfelismerést. Használj Chrome-ot!');return;}
+  if(!SR){showErr(L().errBrowser);return;}
 
-  const rec=new SR();
-  rec.lang='hu-HU';
-  rec.continuous=true;
-  rec.interimResults=true;  // key: real-time interim
-  rec.maxAlternatives=3;    // more alternatives = better matching
+  const rec=makeRec();
+  if(!rec){showErr(L().errBrowser);return;}
 
-  rec.onstart=()=>{
-    setMicStatus('listening','🎤 Hallgatlak…');
-  };
+  attachHandlers(rec);
+  recognition=rec;
+  try{rec.start();}catch(e){}
+  isRec=true;
+  document.getElementById('micBtn').classList.add('rec');
+  document.getElementById('micBtn').textContent='⏹';
+  document.getElementById('mlbl').textContent=L().micRecLabel;
+  document.getElementById('mlbl').classList.add('rec');
+}
+
+function attachHandlers(rec){
+  rec.onstart=()=>setMicStatus('listening', L().micListening);
 
   rec.onresult=e=>{
-    // Collect all results this session
-    let finalText='';
-    let interimText='';
-    let hasFinal=false;
-
+    let finalText='', interimText='', hasFinal=false;
     for(let i=0;i<e.results.length;i++){
-      if(e.results[i].isFinal){
-        finalText+=e.results[i][0].transcript+' ';
-        hasFinal=true;
-      } else {
-        interimText+=e.results[i][0].transcript;
-      }
+      if(e.results[i].isFinal){finalText+=e.results[i][0].transcript+' ';hasFinal=true;}
+      else interimText+=e.results[i][0].transcript;
     }
-
-    // Show interim live in status bar
     if(interimText){
       setMicStatus('interim','🔤 '+interimText);
-      // Live preview: try to match interim to advance interimWordIdx
-      const interimMatch=tryMatch(finalText+' '+interimText, wordIdx);
-      if(interimMatch>wordIdx){
-        interimWordIdx=interimMatch;
-      } else {
-        // Even partial: show which word is being spoken
-        interimWordIdx=tryMatchPartial(interimText, wordIdx);
-      }
+      const im=tryMatch(finalText+' '+interimText, wordIdx);
+      interimWordIdx = im>wordIdx ? im : tryMatchPartial(interimText, wordIdx);
       renderKaraoke();
     }
-
-    // Process confirmed final results
     if(hasFinal){
-      const newIdx=tryMatch(finalText, wordIdx);
-      if(newIdx>wordIdx){
-        wordIdx=newIdx;
-        interimWordIdx=-1;
+      const ni=tryMatch(finalText, wordIdx);
+      if(ni>wordIdx){
+        wordIdx=ni; interimWordIdx=-1;
         document.getElementById('pfill').style.width=Math.min(100,wordIdx/words.length*100)+'%';
         applyHints();
         if(wordIdx>=words.length){
-          finished=true; stopRec();
-          setMicStatus('idle','✅ Kész!');
+          finished=true;stopRec();
+          setMicStatus('idle', L().done);
           renderKaraoke();
           if(level===1) document.getElementById('karaokeWrap').classList.add('flash');
           setTimeout(showSuccess,500);
         } else {
           renderKaraoke();
-          setMicStatus('listening','🎤 Hallgatlak…');
+          setMicStatus('listening', L().micListening);
         }
       }
     }
   };
 
   rec.onerror=e=>{
-    console.log('SR error:',e.error);
-    if(e.error==='not-allowed'){showErr('Mikrofon hozzáférés megtagadva! Engedélyezd a böngészőben.');stopRec();return;}
-    // For other errors (network, aborted) just restart silently
-    if(isRec&&!finished){
-      setTimeout(()=>{ if(isRec&&!finished){try{rec.start();}catch(ex){}} },300);
-    }
+    if(e.error==='not-allowed'){showErr(L().errMic);stopRec();return;}
+    if(isRec&&!finished) setTimeout(()=>{if(isRec&&!finished) restartRec();},300);
   };
 
   rec.onend=()=>{
-    // Auto-restart if we're still supposed to be recording
-    if(isRec&&!finished){
-      setTimeout(()=>{
-        if(isRec&&!finished){
-          try{
-            recognition=new SR();
-            cloneRecHandlers(recognition, rec);
-            recognition.lang='hu-HU';
-            recognition.continuous=true;
-            recognition.interimResults=true;
-            recognition.maxAlternatives=3;
-            recognition.start();
-          }catch(ex){}
-        }
-      },200);
-    }
+    if(isRec&&!finished) setTimeout(()=>{if(isRec&&!finished) restartRec();},200);
   };
-
-  recognition=rec;
-  rec.start();
-  isRec=true;
-  document.getElementById('micBtn').classList.add('rec');
-  document.getElementById('micBtn').textContent='⏹';
-  document.getElementById('mlbl').textContent='🔴 Felvétel – olvasd fel!';
-  document.getElementById('mlbl').classList.add('rec');
 }
 
-function cloneRecHandlers(newRec, oldRec){
-  newRec.onstart=oldRec.onstart;
-  newRec.onresult=oldRec.onresult;
-  newRec.onerror=oldRec.onerror;
-  newRec.onend=oldRec.onend;
+function restartRec(){
+  const rec=makeRec();
+  if(!rec) return;
+  attachHandlers(rec);
+  recognition=rec;
+  try{rec.start();}catch(e){}
 }
 
 function stopRec(){
@@ -548,15 +740,13 @@ function stopRec(){
   if(recognition){try{recognition.stop();}catch(e){}recognition=null;}
   document.getElementById('micBtn').classList.remove('rec');
   document.getElementById('micBtn').textContent='🎤';
-  document.getElementById('mlbl').textContent='Nyomd meg, majd olvasd fel a mondatot!';
+  document.getElementById('mlbl').textContent=L().micLabel;
   document.getElementById('mlbl').classList.remove('rec');
-  if(!finished) setMicStatus('idle','Nyomd meg a mikrofont a kezdéshez');
+  if(!finished) setMicStatus('idle', L().micIdle);
 }
 
 // ── MATCHING ───────────────────────────────────────────────────────
-function norm(s){
-  return s.toLowerCase().replace(/[.,!?;:"'()–—«»„""'']/g,'').trim();
-}
+function norm(s){return s.toLowerCase().replace(/[.,!?;:"'()–—«»„""''¡¿]/g,'').trim();}
 function lev(a,b){
   if(a===b)return 0;
   const m=a.length,n=b.length;
@@ -571,65 +761,52 @@ function lev(a,b){
   return prev[n];
 }
 function wordMatches(said,target){
-  if(!said||!target) return false;
-  if(said===target) return true;
-  if(said.startsWith(target)||target.startsWith(said)) return true;
-  if(target.length>=4&&lev(said,target)<=1) return true;
-  if(target.length>=6&&lev(said,target)<=2) return true;
+  if(!said||!target)return false;
+  if(said===target)return true;
+  if(said.startsWith(target)||target.startsWith(said))return true;
+  if(target.length>=4&&lev(said,target)<=1)return true;
+  if(target.length>=6&&lev(said,target)<=2)return true;
   return false;
 }
-
-// Try to match spoken text against words starting from startIdx
-// Returns new wordIdx after matching
-function tryMatch(text, startIdx){
+function tryMatch(text,startIdx){
   const spoken=norm(text).split(/\s+/).filter(Boolean);
-  if(!spoken.length) return startIdx;
+  if(!spoken.length)return startIdx;
   let wi=startIdx;
-  for(let si=0;si<spoken.length&&wi<words.length;si++){
-    if(wordMatches(spoken[si],norm(words[wi]))){
-      wi++;
-    }
-  }
+  for(let si=0;si<spoken.length&&wi<words.length;si++)
+    if(wordMatches(spoken[si],norm(words[wi])))wi++;
   return wi;
 }
-
-// Partial match: just find if any spoken token matches the current expected word
-function tryMatchPartial(text, startIdx){
-  if(startIdx>=words.length) return -1;
+function tryMatchPartial(text,startIdx){
+  if(startIdx>=words.length)return -1;
   const spoken=norm(text).split(/\s+/).filter(Boolean);
   const target=norm(words[startIdx]);
-  for(const s of spoken){
-    if(s.length>=2&&(target.startsWith(s)||wordMatches(s,target))) return startIdx;
-  }
+  for(const s of spoken)
+    if(s.length>=2&&(target.startsWith(s)||wordMatches(s,target)))return startIdx;
   return -1;
 }
 
-// ── HINTS ──────────────────────────────────────────────────────────
+// ── HINTS & RESULT ─────────────────────────────────────────────────
 function applyHints(){
-  if(attempts<2) return;
-  if(hintShown) {
-    // Keep updating hint to current word
+  if(attempts<2)return;
+  if(hintShown){hintWords=new Set([wordIdx]);return;}
+  if((level===2||level===3)&&wordIdx<words.length){
     hintWords=new Set([wordIdx]);
-    return;
-  }
-  // Trigger hint after 2nd attempt, once stuck for a bit
-  if((level===2||level===3) && wordIdx<words.length){
-    hintWords=new Set([wordIdx]);
-    if(level===3){ghostVis=true;}
+    if(level===3)ghostVis=true;
     const h=document.getElementById('hintBox');
-    h.textContent=level===2?'💡 A helyes szó narancsszínnel látható!':'💡 A következő szó narancsszínnel jelenik meg!';
+    h.textContent=level===2?L().hintL2:L().hintL3;
     h.classList.add('on');
     hintShown=true;
   }
 }
-
-function showErr(msg){const e=document.getElementById('errBox');e.textContent='⚠️ '+msg;e.classList.add('on');}
+function showErr(msg){const e=document.getElementById('errBox');e.textContent=msg;e.classList.add('on');}
 
 function showSuccess(){
-  const isLast=sentIdx>=sentences.length-1;
+  const u=L(), isLast=sentIdx>=sentences.length-1;
   document.getElementById('rIcon').textContent=level>=3?(isLast?'🏆':'⭐'):'🌟';
-  document.getElementById('rMsg').textContent=level<3?'Remek! Szint teljesítve!':isLast?'Brávó! Az egész szöveg kész!':'Brávó! Következő mondat!';
-  document.getElementById('nextBtn').textContent=level<3?'➡️ Következő szint':(isLast?'🏆 Befejezés':'➡️ Következő mondat');
+  document.getElementById('rMsg').textContent=
+    level===1?u.successL1:level===2?u.successL2:isLast?u.successL3last:u.successL3next;
+  document.getElementById('nextBtn').textContent=level<3?u.nextLevel:(isLast?u.finish:u.nextSent);
+  document.getElementById('retryBtn').textContent=u.retry;
   document.getElementById('resBox').classList.add('on');
   document.getElementById('retrySmall').classList.add('hidden');
 }
@@ -638,11 +815,27 @@ function retry(){
   hintWords=new Set();hintShown=false;ghostVis=false;interimWordIdx=-1;
   stopRec();setupLevel();
 }
+
 function nextAction(){
   stopRec();
-  if(level<3){level++;attempts=0;hintWords=new Set();hintShown=false;ghostVis=false;setupLevel();}
-  else{sentIdx++;if(sentIdx>=sentences.length)showScreen('sDone');else{level=1;attempts=0;loadSentence();}}
+  if(level<3){
+    level++;attempts=0;hintWords=new Set();hintShown=false;ghostVis=false;setupLevel();
+  } else {
+    sentIdx++;
+    if(sentIdx>=sentences.length){
+      const u=L();
+      document.getElementById('doneTitle').textContent=u.doneTitle;
+      document.getElementById('doneMsg').textContent=u.doneMsg;
+      document.getElementById('newTextBtn').textContent=u.newText;
+      showScreen('sDone');
+    } else {
+      level=1;attempts=0;loadSentence();
+    }
+  }
 }
+
+// Init UI strings
+applyUIStrings();
 </script>
 </body>
 </html>
