@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olvasás Gyakorló</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0f1117; --card:#1a1d2e; --accent:#f7c948; --pink:#ff6b9d;
+    --teal:#4ecdc4; --text:#f0f0f8; --muted:#5a5f7d; --green:#6bcb77;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    background-image:radial-gradient(ellipse at 20% 50%,#1e1060 0%,transparent 50%),
+                     radial-gradient(ellipse at 80% 20%,#0d3348 0%,transparent 40%);
+    color:var(--text);font-family:'Nunito',sans-serif;
+    min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;padding:20px;
+  }
+  h1{font-family:'Fredoka One',cursive;font-size:clamp(2rem,5vw,3rem);color:var(--accent);
+     text-shadow:0 0 40px rgba(247,201,72,.45);text-align:center;margin-bottom:6px}
+  .sub{color:var(--muted);text-align:center;margin-bottom:28px;font-size:.95rem}
+  .card{background:var(--card);border-radius:26px;padding:28px;width:100%;max-width:700px;
+        box-shadow:0 24px 64px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05)}
+
+  /* setup */
+  .lbl{font-weight:800;font-size:.82rem;text-transform:uppercase;letter-spacing:1px;
+       color:var(--accent);margin-bottom:8px;display:block}
+  textarea{width:100%;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);
+           border-radius:14px;padding:14px;color:var(--text);font-family:'Nunito',sans-serif;
+           font-size:1.05rem;resize:none;outline:none;min-height:90px;transition:border-color .2s}
+  textarea:focus{border-color:var(--accent)}
+  .big{width:100%;margin-top:16px;background:linear-gradient(135deg,var(--accent),#e8b800);
+       color:#1a1a00;font-family:'Fredoka One',cursive;font-size:1.2rem;border:none;
+       border-radius:14px;padding:15px;cursor:pointer;box-shadow:0 4px 20px rgba(247,201,72,.35);
+       transition:transform .15s}
+  .big:hover{transform:translateY(-2px)}
+
+  /* level header */
+  .lhdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .dot{width:13px;height:13px;border-radius:50%;background:var(--muted);transition:all .3s}
+  .dot.active{background:var(--accent);transform:scale(1.5)}
+  .dot.done{background:var(--green)}
+  .lname{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--teal)}
+  .instr{font-size:.88rem;color:var(--muted);line-height:1.65;
+         background:rgba(255,255,255,.04);border-radius:10px;padding:10px 14px;margin-bottom:14px}
+
+  /* text box */
+  .tbox{background:rgba(255,255,255,.04);border-radius:18px;padding:20px 16px;margin:12px 0;
+        display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:center;
+        min-height:90px;position:relative;transition:background .5s}
+  .tbox.flash{animation:flash .7s ease}
+  @keyframes flash{40%{background:rgba(107,203,119,.2)}}
+
+  .w{display:inline-block;padding:5px 10px;border-radius:9px;font-size:1.22rem;
+     font-weight:700;transition:all .25s;user-select:none}
+  .todo{color:rgba(240,240,248,.3)}
+  .cur{color:var(--pink);background:rgba(255,107,157,.18);
+       box-shadow:0 0 0 2px rgba(255,107,157,.55);font-size:1.38rem;
+       animation:wpulse 1s ease-in-out infinite}
+  .done{color:var(--accent)}
+  .blk{color:transparent;background:rgba(255,255,255,.08);min-width:60px;
+       border:2px dashed rgba(255,255,255,.18)}
+  .blk-cur{color:rgba(255,107,157,.45);background:rgba(255,107,157,.12);min-width:60px;
+           border:2px dashed rgba(255,107,157,.6);font-size:1.38rem;
+           box-shadow:0 0 0 2px rgba(255,107,157,.3)}
+  .blk-done{color:var(--accent);background:rgba(247,201,72,.12)}
+  .hid{color:transparent}
+  .rev{color:var(--green);animation:pop .25s ease}
+  @keyframes wpulse{0%,100%{box-shadow:0 0 0 2px rgba(255,107,157,.55)}
+                    50%{box-shadow:0 0 0 10px rgba(255,107,157,.04)}}
+  @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+
+  .ghost{position:absolute;inset:0;border-radius:18px;display:flex;flex-wrap:wrap;
+         gap:8px 12px;align-items:center;justify-content:center;padding:20px 16px;
+         pointer-events:none;opacity:0;transition:opacity 1.4s}
+  .ghost.show{opacity:1}
+  .ghost span{font-size:1.22rem;font-weight:700;color:rgba(240,240,248,.14);padding:5px 10px}
+
+  /* progress */
+  .prog{background:rgba(255,255,255,.07);border-radius:999px;height:7px;overflow:hidden;margin:0 0 14px}
+  .pfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--accent));
+         width:0;transition:width .4s ease}
+
+  /* live */
+  .live{min-height:34px;background:rgba(78,205,196,.07);border:1px solid rgba(78,205,196,.15);
+        border-radius:10px;padding:8px 14px;font-size:.88rem;color:var(--teal);
+        text-align:center;font-style:italic;margin-bottom:12px}
+
+  /* mic */
+  .mic-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin:10px 0 6px}
+  #micBtn{width:78px;height:78px;border-radius:50%;border:none;cursor:pointer;font-size:2rem;
+          display:flex;align-items:center;justify-content:center;
+          background:linear-gradient(135deg,var(--pink),#c23a7d);
+          box-shadow:0 4px 22px rgba(255,107,157,.4);transition:transform .15s}
+  #micBtn:hover{transform:scale(1.08)}
+  #micBtn.rec{background:linear-gradient(135deg,#ff3d3d,#b81a1a);
+              animation:mpulse 1s ease-in-out infinite}
+  @keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,61,61,.55)}
+                    50%{box-shadow:0 0 0 18px rgba(255,61,61,0)}}
+  .mlbl{font-size:.88rem;color:var(--muted);text-align:center}
+  .mlbl.rec{color:var(--teal);font-weight:700}
+
+  /* hint / err */
+  .hint{background:rgba(247,201,72,.08);border:1px solid rgba(247,201,72,.28);
+        border-radius:12px;padding:10px 14px;font-size:.88rem;
+        color:rgba(247,201,72,.92);margin-bottom:12px;line-height:1.55;display:none}
+  .hint.on{display:block}
+  .err{background:rgba(255,100,61,.1);border:1px solid rgba(255,100,61,.3);
+       border-radius:12px;padding:10px 14px;font-size:.88rem;color:#ff8f6b;
+       margin-bottom:12px;display:none}
+  .err.on{display:block}
+
+  /* result */
+  .res{text-align:center;padding:14px 0;display:none}
+  .res.on{display:block}
+  .ri{font-size:3rem;margin-bottom:6px}
+  .rm{font-family:'Fredoka One',cursive;font-size:1.55rem;color:var(--green);margin-bottom:18px}
+  .brow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .bsec{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--text);
+        font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;
+        border-radius:12px;padding:11px 22px;cursor:pointer;transition:background .2s}
+  .bsec:hover{background:rgba(255,255,255,.14)}
+  .bpri{background:linear-gradient(135deg,var(--green),#3a9f44);color:#0a1a0b;
+        font-family:'Fredoka One',cursive;font-size:1rem;border:none;
+        border-radius:12px;padding:11px 26px;cursor:pointer;
+        box-shadow:0 4px 14px rgba(107,203,119,.32);transition:transform .15s}
+  .bpri:hover{transform:translateY(-2px)}
+
+  /* done */
+  .alldone{text-align:center}
+  .trophy{font-size:5.5rem;display:block;animation:float 2.2s ease-in-out infinite;margin-bottom:14px}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .alldone p{color:var(--muted);margin-bottom:24px}
+
+  .hidden{display:none!important}
+  .mt{margin-top:10px;text-align:center}
+</style>
+</head>
+<body>
+
+<h1>📖 Olvasás Gyakorló</h1>
+<p class="sub">Tanulj meg mondatot fejből – mikrofon segítségével</p>
+
+<div class="card">
+
+  <div id="sSetup">
+    <span class="lbl">Írd be a mondatot:</span>
+    <textarea id="sinput" placeholder="Pl.: A gyors barna róka átugrott a lusta kutya felett."></textarea>
+    <button class="big" onclick="startPractice()">🚀 Kezdjük el!</button>
+  </div>
+
+  <div id="sLevel" class="hidden">
+    <div class="lhdr">
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+      <span class="lname" id="lname"></span>
+    </div>
+    <div class="instr" id="instr"></div>
+    <div class="hint" id="hintBox"></div>
+    <div class="err"  id="errBox"></div>
+
+    <div class="tbox" id="tbox"><div class="ghost" id="ghost"></div></div>
+
+    <div class="prog"><div class="pfill" id="pfill"></div></div>
+    <div class="live" id="live">…</div>
+
+    <div class="mic-wrap">
+      <button id="micBtn" onclick="toggleMic()">🎤</button>
+      <span class="mlbl" id="mlbl">Nyomd meg a mikrofont, majd olvasd fel a mondatot!</span>
+    </div>
+
+    <div class="res" id="resBox">
+      <div class="ri">🌟</div>
+      <div class="rm" id="rMsg"></div>
+      <div class="brow">
+        <button class="bsec" onclick="retry()">🔄 Újra próbálom</button>
+        <button class="bpri" id="nextBtn" onclick="nextLevel()"></button>
+      </div>
+    </div>
+
+    <div class="mt">
+      <button class="bsec" id="retrySmall" onclick="retry()">🔄 Újrakezdem a szintet</button>
+    </div>
+  </div>
+
+  <div id="sDone" class="hidden alldone">
+    <span class="trophy">🏆</span>
+    <div class="rm" style="font-size:2rem">Szuper! Sikerült!</div>
+    <p>Megtanultad a mondatot fejből! Büszke lehetsz magadra. 🎉</p>
+    <button class="big" onclick="resetAll()">🔁 Új mondat</button>
+  </div>
+
+</div>
+
+<script>
+// ── state ──────────────────────────────────────────────────────────
+let words=[], sentence='', level=1, idx=0, attempts=0;
+let hintShown=false, ghostVis=false, finished=false;
+let recognition=null, isRec=false;
+
+const BLANK=3;
+function blankSet(){const s=new Set();for(let i=BLANK-1;i<words.length;i+=BLANK)s.add(i);return s;}
+
+const LVL={
+  1:{name:'1. szint: Olvasás',    instr:'📖 Látod a szöveget – olvasd fel hangosan! A mikrofon figyeli és karaoke-szerűen kiemeli, amit már elmondtál.'},
+  2:{name:'2. szint: Szavak nélkül',instr:'🧩 Néhány szó el van takarva – ezeket emlékezetből kell mondanod. Olvasd fel a teljes mondatot!'},
+  3:{name:'3. szint: Fejből!',    instr:'🧠 A szöveg rejtve van. Mondd fejből – ahogy haladod, a szavak megjelennek!'},
+};
+
+// ── screens ────────────────────────────────────────────────────────
+function showScreen(id){
+  ['sSetup','sLevel','sDone'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));
+}
+
+// ── start ──────────────────────────────────────────────────────────
+function startPractice(){
+  sentence=document.getElementById('sinput').value.trim();
+  if(!sentence){alert('Kérlek adj meg egy mondatot!');return;}
+  words=sentence.split(/\s+/).filter(Boolean);
+  level=1; attempts=0;
+  showScreen('sLevel');
+  setupLevel();
+}
+
+function resetAll(){
+  stopRec();
+  document.getElementById('sinput').value='';
+  showScreen('sSetup');
+}
+
+// ── level setup ────────────────────────────────────────────────────
+function setupLevel(){
+  idx=0; hintShown=false; ghostVis=false; finished=false; attempts++;
+  document.getElementById('resBox').classList.remove('on');
+  document.getElementById('retrySmall').classList.remove('hidden');
+  document.getElementById('hintBox').classList.remove('on');
+  document.getElementById('errBox').classList.remove('on');
+  document.getElementById('pfill').style.width='0%';
+  document.getElementById('live').textContent='…';
+  stopRec();
+
+  for(let i=1;i<=3;i++){
+    const d=document.getElementById('d'+i);
+    d.className='dot'+(i<level?' done':i===level?' active':'');
+  }
+  document.getElementById('lname').textContent=LVL[level].name;
+  document.getElementById('instr').textContent=LVL[level].instr;
+  document.getElementById('nextBtn').textContent=level>=3?'🏆 Befejezés':'➡️ Következő szint';
+  renderWords();
+}
+
+// ── render ─────────────────────────────────────────────────────────
+function wordClass(i){
+  const bl=blankSet();
+  if(level===1){
+    if(i<idx)return'done'; if(i===idx)return'cur'; return'todo';
+  }
+  if(level===2){
+    if(bl.has(i)){if(i<idx)return'blk-done';if(i===idx)return'blk-cur';return'blk';}
+    if(i<idx)return'done'; if(i===idx)return'cur'; return'todo';
+  }
+  // level 3
+  if(i<idx)return'rev'; if(i===idx)return'cur'; return'hid';
+}
+
+function renderWords(){
+  const box=document.getElementById('tbox');
+  const ghost=document.getElementById('ghost');
+  box.innerHTML='';
+  box.appendChild(ghost);
+  ghost.innerHTML='';
+  ghost.className='ghost'+(ghostVis?' show':'');
+
+  if(level===3){
+    words.forEach(w=>{
+      const s=document.createElement('span');
+      s.textContent=w; ghost.appendChild(s);
+    });
+  }
+
+  words.forEach((w,i)=>{
+    const sp=document.createElement('span');
+    sp.className='w '+wordClass(i);
+    // level 3 current: show placeholder
+    sp.textContent=(level===3&&i===idx)?'▪':w;
+    box.appendChild(sp);
+  });
+}
+
+// ── mic ────────────────────────────────────────────────────────────
+function toggleMic(){if(isRec)stopRec();else startRec();}
+
+function startRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showErr('A böngésző nem támogatja a hangfelismerést. Használj Chrome-ot!');return;}
+  const rec=new SR();
+  rec.lang='hu-HU'; rec.continuous=true; rec.interimResults=true; rec.maxAlternatives=1;
+
+  rec.onresult=e=>{
+    let full='';
+    for(let i=0;i<e.results.length;i++) full+=e.results[i][0].transcript+' ';
+    full=full.trim();
+    document.getElementById('live').textContent='"'+full+'"';
+    processText(full);
+  };
+  rec.onerror=e=>{
+    if(e.error==='not-allowed'){showErr('Mikrofon hozzáférés megtagadva! Engedélyezd a böngészőben.');}
+    if(e.error!=='no-speech') stopRec();
+  };
+  rec.onend=()=>{ if(isRec&&!finished){try{rec.start();}catch(e){}} };
+
+  recognition=rec; rec.start(); isRec=true;
+  document.getElementById('micBtn').classList.add('rec');
+  document.getElementById('micBtn').textContent='⏹';
+  document.getElementById('mlbl').textContent='🔴 Hallgatlak – olvasd fel a mondatot!';
+  document.getElementById('mlbl').classList.add('rec');
+}
+
+function stopRec(){
+  isRec=false;
+  if(recognition){try{recognition.stop();}catch(e){} recognition=null;}
+  const btn=document.getElementById('micBtn');
+  if(btn){btn.classList.remove('rec');btn.textContent='🎤';}
+  const lbl=document.getElementById('mlbl');
+  if(lbl){lbl.textContent='Nyomd meg a mikrofont, majd olvasd fel a mondatot!';lbl.classList.remove('rec');}
+}
+
+// ── process speech ─────────────────────────────────────────────────
+function norm(s){return s.toLowerCase().replace(/[.,!?;:"'()–—]/g,'').trim();}
+
+function processText(text){
+  if(finished) return;
+  const spoken=text.toLowerCase().replace(/[.,!?;:"'()–—]/g,'').split(/\s+/).filter(Boolean);
+  let newIdx=idx;
+  let si=0, wi=idx;
+  while(wi<words.length && si<spoken.length){
+    const t=norm(words[wi]), s=spoken[si];
+    if(s===t||s.includes(t)||t.includes(s)){wi++;si++;newIdx=wi;}
+    else si++;
+  }
+  if(newIdx<=idx) return;
+  idx=newIdx;
+
+  // progress
+  document.getElementById('pfill').style.width=Math.min(100,idx/words.length*100)+'%';
+
+  // hints
+  if(!hintShown && attempts>=2){
+    if(level===2 && idx>=Math.floor(words.length/2)){
+      showHint('💡 Segítség: a teljes mondat: „'+sentence+'"');
+    }
+    if(level===3 && idx>=2){
+      showHint('💡 Nehéz? Halvány segítség jelenik meg a háttérben!');
+      ghostVis=true;
+      document.getElementById('ghost').classList.add('show');
+    }
+    hintShown=true;
+  }
+
+  if(idx>=words.length){
+    finished=true; stopRec();
+    if(level===1) document.getElementById('tbox').classList.add('flash');
+    setTimeout(showSuccess,400);
+    return;
+  }
+  renderWords();
+}
+
+// ── ui helpers ─────────────────────────────────────────────────────
+function showHint(msg){
+  const h=document.getElementById('hintBox');
+  h.textContent=msg; h.classList.add('on');
+}
+function showErr(msg){
+  const e=document.getElementById('errBox');
+  e.textContent='⚠️ '+msg; e.classList.add('on');
+}
+function showSuccess(){
+  document.getElementById('rMsg').textContent=level<3?'Remek! Szint teljesítve!':'Brávó! Mindent tudtál fejből!';
+  document.getElementById('resBox').classList.add('on');
+  document.getElementById('retrySmall').classList.add('hidden');
+}
+
+function retry(){stopRec();setupLevel();}
+function nextLevel(){
+  stopRec();
+  if(level>=3){showScreen('sDone');return;}
+  level++; attempts=0; setupLevel();
+}
+</script>
+</body>
+</html>
