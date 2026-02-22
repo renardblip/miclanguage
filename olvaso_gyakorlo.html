@@ -6,9 +6,9 @@
 <title>Olvasás Gyakorló</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0f1117; --card:#1a1d2e; --accent:#f7c948; --pink:#ff6b9d;
-    --teal:#4ecdc4; --text:#f0f0f8; --muted:#5a5f7d; --green:#6bcb77;
+  :root{
+    --bg:#0f1117;--card:#1a1d2e;--accent:#f7c948;--pink:#ff6b9d;
+    --teal:#4ecdc4;--text:#f0f0f8;--muted:#5a5f7d;--green:#6bcb77;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
@@ -40,54 +40,88 @@
 
   /* level header */
   .lhdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-  .dot{width:13px;height:13px;border-radius:50%;background:var(--muted);transition:all .3s}
+  .dot{width:13px;height:13px;border-radius:50%;background:var(--muted);transition:all .3s;flex-shrink:0}
   .dot.active{background:var(--accent);transform:scale(1.5)}
   .dot.done{background:var(--green)}
   .lname{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--teal)}
   .instr{font-size:.88rem;color:var(--muted);line-height:1.65;
          background:rgba(255,255,255,.04);border-radius:10px;padding:10px 14px;margin-bottom:14px}
 
-  /* text box */
-  .tbox{background:rgba(255,255,255,.04);border-radius:18px;padding:20px 16px;margin:12px 0;
-        display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:center;
-        min-height:90px;position:relative;transition:background .5s}
-  .tbox.flash{animation:flash .7s ease}
+  /* ── KARAOKE TEXT DISPLAY ── */
+  .karaoke-wrap{
+    background:rgba(255,255,255,.04);border-radius:18px;
+    padding:22px 20px;margin:12px 0;
+    font-size:1.3rem;font-weight:700;line-height:2;
+    text-align:center;word-break:break-word;
+    min-height:80px;position:relative;
+    transition:background .5s;
+  }
+  .karaoke-wrap.flash{animation:flash .7s ease}
   @keyframes flash{40%{background:rgba(107,203,119,.2)}}
 
-  .w{display:inline-block;padding:5px 10px;border-radius:9px;font-size:1.22rem;
-     font-weight:700;transition:all .25s;user-select:none}
-  .todo{color:rgba(240,240,248,.3)}
-  .cur{color:var(--pink);background:rgba(255,107,157,.18);
-       box-shadow:0 0 0 2px rgba(255,107,157,.55);font-size:1.38rem;
-       animation:wpulse 1s ease-in-out infinite}
-  .done{color:var(--accent)}
-  .blk{color:transparent;background:rgba(255,255,255,.08);min-width:60px;
-       border:2px dashed rgba(255,255,255,.18)}
-  .blk-cur{color:rgba(255,107,157,.45);background:rgba(255,107,157,.12);min-width:60px;
-           border:2px dashed rgba(255,107,157,.6);font-size:1.38rem;
-           box-shadow:0 0 0 2px rgba(255,107,157,.3)}
-  .blk-done{color:var(--accent);background:rgba(247,201,72,.12)}
-  .hid{color:transparent}
-  .rev{color:var(--green);animation:pop .25s ease}
-  @keyframes wpulse{0%,100%{box-shadow:0 0 0 2px rgba(255,107,157,.55)}
-                    50%{box-shadow:0 0 0 10px rgba(255,107,157,.04)}}
-  @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  /* Each word is a span, coloured by state */
+  .kw{
+    display:inline; /* inline so they flow naturally */
+    transition:color .2s, text-shadow .2s;
+    white-space:pre; /* keeps the space after each word */
+  }
+  .kw.done{color:var(--accent);}
+  .kw.cur{
+    color:var(--pink);
+    text-shadow:0 0 16px rgba(255,107,157,.7);
+    animation:kpulse 0.9s ease-in-out infinite;
+  }
+  .kw.todo{color:rgba(240,240,248,.28);}
 
-  .ghost{position:absolute;inset:0;border-radius:18px;display:flex;flex-wrap:wrap;
-         gap:8px 12px;align-items:center;justify-content:center;padding:20px 16px;
-         pointer-events:none;opacity:0;transition:opacity 1.4s}
-  .ghost.show{opacity:1}
-  .ghost span{font-size:1.22rem;font-weight:700;color:rgba(240,240,248,.14);padding:5px 10px}
+  /* Level 2: blanked words */
+  .kw.blank{
+    color:transparent;
+    background:rgba(255,255,255,.1);
+    border-radius:6px;
+    border-bottom:2px solid rgba(255,255,255,.25);
+    padding:0 4px;
+  }
+  .kw.blank.cur{
+    color:transparent;
+    background:rgba(255,107,157,.2);
+    border-bottom:2px solid var(--pink);
+    text-shadow:none;
+    animation:kpulse 0.9s ease-in-out infinite;
+  }
+  .kw.blank.done{
+    color:var(--accent);
+    background:rgba(247,201,72,.12);
+    border-bottom:2px solid var(--accent);
+  }
+
+  /* Level 3: hidden words */
+  .kw.hidden{color:transparent;}
+  .kw.revealed{color:var(--green);text-shadow:0 0 10px rgba(107,203,119,.4)}
+
+  @keyframes kpulse{
+    0%,100%{text-shadow:0 0 8px rgba(255,107,157,.6)}
+    50%{text-shadow:0 0 24px rgba(255,107,157,.9)}
+  }
+
+  /* ghost hint for level 3 */
+  .ghost-text{
+    position:absolute;inset:0;border-radius:18px;
+    display:flex;align-items:center;justify-content:center;
+    padding:22px 20px;pointer-events:none;
+    font-size:1.3rem;font-weight:700;line-height:2;
+    text-align:center;color:rgba(240,240,248,.13);
+    opacity:0;transition:opacity 1.4s;word-break:break-word;
+  }
+  .ghost-text.show{opacity:1}
 
   /* progress */
-  .prog{background:rgba(255,255,255,.07);border-radius:999px;height:7px;overflow:hidden;margin:0 0 14px}
+  .prog{background:rgba(255,255,255,.07);border-radius:999px;height:8px;overflow:hidden;margin:0 0 14px}
   .pfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--accent));
          width:0;transition:width .4s ease}
 
-  /* live */
-  .live{min-height:34px;background:rgba(78,205,196,.07);border:1px solid rgba(78,205,196,.15);
-        border-radius:10px;padding:8px 14px;font-size:.88rem;color:var(--teal);
-        text-align:center;font-style:italic;margin-bottom:12px}
+  /* status line */
+  .status{min-height:28px;font-size:.88rem;color:var(--teal);text-align:center;
+          font-style:italic;margin-bottom:12px;opacity:.8}
 
   /* mic */
   .mic-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin:10px 0 6px}
@@ -98,8 +132,7 @@
   #micBtn:hover{transform:scale(1.08)}
   #micBtn.rec{background:linear-gradient(135deg,#ff3d3d,#b81a1a);
               animation:mpulse 1s ease-in-out infinite}
-  @keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,61,61,.55)}
-                    50%{box-shadow:0 0 0 18px rgba(255,61,61,0)}}
+  @keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,61,61,.55)}50%{box-shadow:0 0 0 18px rgba(255,61,61,0)}}
   .mlbl{font-size:.88rem;color:var(--muted);text-align:center}
   .mlbl.rec{color:var(--teal);font-weight:700}
 
@@ -146,12 +179,14 @@
 
 <div class="card">
 
+  <!-- SETUP -->
   <div id="sSetup">
     <span class="lbl">Írd be a mondatot:</span>
     <textarea id="sinput" placeholder="Pl.: A gyors barna róka átugrott a lusta kutya felett."></textarea>
     <button class="big" onclick="startPractice()">🚀 Kezdjük el!</button>
   </div>
 
+  <!-- LEVEL -->
   <div id="sLevel" class="hidden">
     <div class="lhdr">
       <div class="dot" id="d1"></div>
@@ -163,10 +198,14 @@
     <div class="hint" id="hintBox"></div>
     <div class="err"  id="errBox"></div>
 
-    <div class="tbox" id="tbox"><div class="ghost" id="ghost"></div></div>
+    <!-- Karaoke display -->
+    <div class="karaoke-wrap" id="karaokeWrap">
+      <div class="ghost-text" id="ghostText"></div>
+      <div id="karaokeText"></div>
+    </div>
 
     <div class="prog"><div class="pfill" id="pfill"></div></div>
-    <div class="live" id="live">…</div>
+    <div class="status" id="statusLine">Nyomd meg a mikrofont és kezdj el olvasni!</div>
 
     <div class="mic-wrap">
       <button id="micBtn" onclick="toggleMic()">🎤</button>
@@ -187,6 +226,7 @@
     </div>
   </div>
 
+  <!-- ALL DONE -->
   <div id="sDone" class="hidden alldone">
     <span class="trophy">🏆</span>
     <div class="rm" style="font-size:2rem">Szuper! Sikerült!</div>
@@ -201,19 +241,29 @@
 let words=[], sentence='', level=1, idx=0, attempts=0;
 let hintShown=false, ghostVis=false, finished=false;
 let recognition=null, isRec=false;
+// Track which final results we've already processed
+let lastProcessedResultIndex = 0;
 
 const BLANK=3;
-function blankSet(){const s=new Set();for(let i=BLANK-1;i<words.length;i+=BLANK)s.add(i);return s;}
+function blankSet(){
+  const s=new Set();
+  for(let i=BLANK-1;i<words.length;i+=BLANK) s.add(i);
+  return s;
+}
 
 const LVL={
-  1:{name:'1. szint: Olvasás',    instr:'📖 Látod a szöveget – olvasd fel hangosan! A mikrofon figyeli és karaoke-szerűen kiemeli, amit már elmondtál.'},
-  2:{name:'2. szint: Szavak nélkül',instr:'🧩 Néhány szó el van takarva – ezeket emlékezetből kell mondanod. Olvasd fel a teljes mondatot!'},
-  3:{name:'3. szint: Fejből!',    instr:'🧠 A szöveg rejtve van. Mondd fejből – ahogy haladod, a szavak megjelennek!'},
+  1:{name:'1. szint: Olvasás',
+     instr:'📖 Látod a szöveget – olvasd fel hangosan! A mikrofon figyeli és karaoke-szerűen kiemeli, amit már elmondtál.'},
+  2:{name:'2. szint: Szavak nélkül',
+     instr:'🧩 Néhány szó el van takarva – ezeket emlékezetből kell mondanod. Olvasd fel a teljes mondatot!'},
+  3:{name:'3. szint: Fejből!',
+     instr:'🧠 A szöveg rejtve van. Mondd fejből – ahogy haladod, a szavak megjelennek!'},
 };
 
 // ── screens ────────────────────────────────────────────────────────
 function showScreen(id){
-  ['sSetup','sLevel','sDone'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));
+  ['sSetup','sLevel','sDone'].forEach(x=>
+    document.getElementById(x).classList.toggle('hidden',x!==id));
 }
 
 // ── start ──────────────────────────────────────────────────────────
@@ -234,13 +284,18 @@ function resetAll(){
 
 // ── level setup ────────────────────────────────────────────────────
 function setupLevel(){
-  idx=0; hintShown=false; ghostVis=false; finished=false; attempts++;
+  idx=0; hintShown=false; ghostVis=false; finished=false;
+  attempts++;
+  lastProcessedResultIndex=0;
+
   document.getElementById('resBox').classList.remove('on');
   document.getElementById('retrySmall').classList.remove('hidden');
   document.getElementById('hintBox').classList.remove('on');
   document.getElementById('errBox').classList.remove('on');
   document.getElementById('pfill').style.width='0%';
-  document.getElementById('live').textContent='…';
+  document.getElementById('statusLine').textContent='Nyomd meg a mikrofont és kezdj el olvasni!';
+  document.getElementById('ghostText').classList.remove('show');
+  document.getElementById('ghostText').textContent='';
   stopRec();
 
   for(let i=1;i<=3;i++){
@@ -250,45 +305,60 @@ function setupLevel(){
   document.getElementById('lname').textContent=LVL[level].name;
   document.getElementById('instr').textContent=LVL[level].instr;
   document.getElementById('nextBtn').textContent=level>=3?'🏆 Befejezés':'➡️ Következő szint';
-  renderWords();
+
+  // Set ghost text for level 3
+  if(level===3){
+    document.getElementById('ghostText').textContent=sentence;
+  }
+
+  renderKaraoke();
 }
 
-// ── render ─────────────────────────────────────────────────────────
-function wordClass(i){
+// ── render karaoke ─────────────────────────────────────────────────
+function getWordClass(i){
   const bl=blankSet();
   if(level===1){
-    if(i<idx)return'done'; if(i===idx)return'cur'; return'todo';
+    if(i<idx) return 'kw done';
+    if(i===idx) return 'kw cur';
+    return 'kw todo';
   }
   if(level===2){
-    if(bl.has(i)){if(i<idx)return'blk-done';if(i===idx)return'blk-cur';return'blk';}
-    if(i<idx)return'done'; if(i===idx)return'cur'; return'todo';
+    if(bl.has(i)){
+      if(i<idx) return 'kw blank done';
+      if(i===idx) return 'kw blank cur';
+      return 'kw blank';
+    }
+    if(i<idx) return 'kw done';
+    if(i===idx) return 'kw cur';
+    return 'kw todo';
   }
   // level 3
-  if(i<idx)return'rev'; if(i===idx)return'cur'; return'hid';
+  if(i<idx) return 'kw revealed';
+  if(i===idx) return 'kw cur';
+  return 'kw hidden';
 }
 
-function renderWords(){
-  const box=document.getElementById('tbox');
-  const ghost=document.getElementById('ghost');
-  box.innerHTML='';
-  box.appendChild(ghost);
-  ghost.innerHTML='';
-  ghost.className='ghost'+(ghostVis?' show':'');
-
-  if(level===3){
-    words.forEach(w=>{
-      const s=document.createElement('span');
-      s.textContent=w; ghost.appendChild(s);
-    });
-  }
-
+function renderKaraoke(){
+  const container=document.getElementById('karaokeText');
+  container.innerHTML='';
   words.forEach((w,i)=>{
     const sp=document.createElement('span');
-    sp.className='w '+wordClass(i);
-    // level 3 current: show placeholder
-    sp.textContent=(level===3&&i===idx)?'▪':w;
-    box.appendChild(sp);
+    sp.className=getWordClass(i);
+    // Level 3 not-yet-revealed: show placeholder character (same width feel)
+    if(level===3 && i>=idx){
+      sp.textContent=(i===idx?'▮':'▮');
+    } else {
+      sp.textContent=w;
+    }
+    // Space after each word except last
+    if(i<words.length-1) sp.textContent+=' ';
+    container.appendChild(sp);
   });
+
+  // Update ghost visibility
+  if(level===3 && ghostVis){
+    document.getElementById('ghostText').classList.add('show');
+  }
 }
 
 // ── mic ────────────────────────────────────────────────────────────
@@ -297,23 +367,51 @@ function toggleMic(){if(isRec)stopRec();else startRec();}
 function startRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){showErr('A böngésző nem támogatja a hangfelismerést. Használj Chrome-ot!');return;}
+
+  lastProcessedResultIndex=0;
   const rec=new SR();
-  rec.lang='hu-HU'; rec.continuous=true; rec.interimResults=true; rec.maxAlternatives=1;
+  rec.lang='hu-HU';
+  rec.continuous=true;
+  rec.interimResults=true; // we need interim to show "live" status, but only process FINAL for matching
+  rec.maxAlternatives=1;
 
   rec.onresult=e=>{
-    let full='';
-    for(let i=0;i<e.results.length;i++) full+=e.results[i][0].transcript+' ';
-    full=full.trim();
-    document.getElementById('live').textContent='"'+full+'"';
-    processText(full);
+    // Show interim transcript in status line for feedback
+    let interimText='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(!e.results[i].isFinal) interimText+=e.results[i][0].transcript;
+    }
+    if(interimText){
+      document.getElementById('statusLine').textContent='🎤 '+interimText;
+    }
+
+    // Only process NEW final results to avoid repetition
+    for(let i=lastProcessedResultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal){
+        const text=e.results[i][0].transcript;
+        processFinalChunk(text);
+        lastProcessedResultIndex=i+1;
+      }
+    }
   };
+
   rec.onerror=e=>{
-    if(e.error==='not-allowed'){showErr('Mikrofon hozzáférés megtagadva! Engedélyezd a böngészőben.');}
+    if(e.error==='not-allowed'){
+      showErr('Mikrofon hozzáférés megtagadva! Engedélyezd a böngészőben.');
+    }
     if(e.error!=='no-speech') stopRec();
   };
-  rec.onend=()=>{ if(isRec&&!finished){try{rec.start();}catch(e){}} };
 
-  recognition=rec; rec.start(); isRec=true;
+  rec.onend=()=>{
+    if(isRec && !finished){
+      lastProcessedResultIndex=0; // reset index on reconnect
+      try{rec.start();}catch(e){}
+    }
+  };
+
+  recognition=rec;
+  rec.start();
+  isRec=true;
   document.getElementById('micBtn').classList.add('rec');
   document.getElementById('micBtn').textContent='⏹';
   document.getElementById('mlbl').textContent='🔴 Hallgatlak – olvasd fel a mondatot!';
@@ -326,48 +424,69 @@ function stopRec(){
   const btn=document.getElementById('micBtn');
   if(btn){btn.classList.remove('rec');btn.textContent='🎤';}
   const lbl=document.getElementById('mlbl');
-  if(lbl){lbl.textContent='Nyomd meg a mikrofont, majd olvasd fel a mondatot!';lbl.classList.remove('rec');}
+  if(lbl){
+    lbl.textContent='Nyomd meg a mikrofont, majd olvasd fel a mondatot!';
+    lbl.classList.remove('rec');
+  }
 }
 
-// ── process speech ─────────────────────────────────────────────────
-function norm(s){return s.toLowerCase().replace(/[.,!?;:"'()–—]/g,'').trim();}
+// ── process one final speech chunk ────────────────────────────────
+function norm(s){
+  return s.toLowerCase()
+    .replace(/[.,!?;:"'()–—«»„"]/g,'')
+    .trim();
+}
 
-function processText(text){
+function processFinalChunk(text){
   if(finished) return;
-  const spoken=text.toLowerCase().replace(/[.,!?;:"'()–—]/g,'').split(/\s+/).filter(Boolean);
-  let newIdx=idx;
-  let si=0, wi=idx;
-  while(wi<words.length && si<spoken.length){
-    const t=norm(words[wi]), s=spoken[si];
-    if(s===t||s.includes(t)||t.includes(s)){wi++;si++;newIdx=wi;}
-    else si++;
-  }
-  if(newIdx<=idx) return;
-  idx=newIdx;
 
-  // progress
-  document.getElementById('pfill').style.width=Math.min(100,idx/words.length*100)+'%';
+  // Tokenize the spoken chunk
+  const spoken=text.toLowerCase()
+    .replace(/[.,!?;:"'()–—«»„"]/g,'')
+    .split(/\s+/)
+    .filter(Boolean);
 
-  // hints
-  if(!hintShown && attempts>=2){
-    if(level===2 && idx>=Math.floor(words.length/2)){
-      showHint('💡 Segítség: a teljes mondat: „'+sentence+'"');
+  if(spoken.length===0) return;
+
+  // Try to greedily match spoken words against the target words starting from idx
+  let wi=idx;
+  for(let si=0;si<spoken.length && wi<words.length;si++){
+    const target=norm(words[wi]);
+    const said=spoken[si];
+    // Flexible match: exact, or one contains the other (handles partial recognition)
+    if(said===target || said.startsWith(target) || target.startsWith(said)){
+      wi++;
     }
-    if(level===3 && idx>=2){
-      showHint('💡 Nehéz? Halvány segítség jelenik meg a háttérben!');
-      ghostVis=true;
-      document.getElementById('ghost').classList.add('show');
-    }
-    hintShown=true;
+    // If no match, skip this spoken word and try next
   }
 
-  if(idx>=words.length){
-    finished=true; stopRec();
-    if(level===1) document.getElementById('tbox').classList.add('flash');
-    setTimeout(showSuccess,400);
-    return;
+  if(wi>idx){
+    idx=wi;
+    document.getElementById('pfill').style.width=Math.min(100,idx/words.length*100)+'%';
+
+    // hints after 2nd attempt
+    if(!hintShown && attempts>=2){
+      if(level===2 && idx>=Math.floor(words.length/2)){
+        showHint('💡 Segítség: a teljes mondat: „'+sentence+'"');
+        hintShown=true;
+      }
+      if(level===3 && idx>=2){
+        showHint('💡 Halvány segítség megjelent a háttérben!');
+        ghostVis=true;
+        hintShown=true;
+      }
+    }
+
+    if(idx>=words.length){
+      finished=true;
+      stopRec();
+      document.getElementById('statusLine').textContent='✅ Kész!';
+      if(level===1) document.getElementById('karaokeWrap').classList.add('flash');
+      setTimeout(showSuccess,500);
+    } else {
+      renderKaraoke();
+    }
   }
-  renderWords();
 }
 
 // ── ui helpers ─────────────────────────────────────────────────────
@@ -380,9 +499,11 @@ function showErr(msg){
   e.textContent='⚠️ '+msg; e.classList.add('on');
 }
 function showSuccess(){
-  document.getElementById('rMsg').textContent=level<3?'Remek! Szint teljesítve!':'Brávó! Mindent tudtál fejből!';
+  document.getElementById('rMsg').textContent=
+    level<3?'Remek! Szint teljesítve!':'Brávó! Mindent tudtál fejből!';
   document.getElementById('resBox').classList.add('on');
   document.getElementById('retrySmall').classList.add('hidden');
+  renderKaraoke(); // show all words done
 }
 
 function retry(){stopRec();setupLevel();}
