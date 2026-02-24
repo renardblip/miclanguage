@@ -17,27 +17,71 @@ body{
                    radial-gradient(ellipse at 80% 20%,#0d3348 0%,transparent 40%);
   color:var(--text);font-family:'Nunito',sans-serif;
   min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:20px;
+  align-items:center;justify-content:flex-start;padding:20px;
 }
-h1{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,5vw,2.8rem);color:var(--accent);
-   text-shadow:0 0 40px rgba(247,201,72,.45);text-align:center;margin-bottom:4px}
-.sub{color:var(--muted);text-align:center;margin-bottom:24px;font-size:.9rem}
-.card{background:var(--card);border-radius:26px;padding:26px;width:100%;max-width:720px;
-      box-shadow:0 24px 64px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05)}
 
-/* LANGUAGE */
-.lbl{font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;
-     color:var(--accent);margin-bottom:10px;display:block}
-.lang-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+/* TOP BAR */
+.topbar{
+  width:100%;max-width:720px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.topbar h1{font-family:'Fredoka One',cursive;font-size:clamp(1.4rem,4vw,2.2rem);color:var(--accent);
+   text-shadow:0 0 30px rgba(247,201,72,.45);margin:0}
+.exit-btn{
+  background:rgba(255,107,157,.12);border:1.5px solid rgba(255,107,157,.35);
+  color:var(--pink);font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;
+  border-radius:12px;padding:8px 16px;cursor:pointer;
+  transition:background .2s,transform .15s;white-space:nowrap;flex-shrink:0;
+  display:flex;align-items:center;gap:6px;
+}
+.exit-btn:hover{background:rgba(255,107,157,.25);transform:scale(1.04)}
+.exit-btn.hidden{visibility:hidden;pointer-events:none}
+
+.sub{color:var(--muted);text-align:center;margin-bottom:20px;font-size:.88rem}
+.card{background:var(--card);border-radius:26px;padding:26px;width:100%;max-width:720px;
+      box-shadow:0 24px 64px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05);margin-bottom:20px}
+
+/* LABELS */
+.lbl{font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:1px;
+     color:var(--accent);margin-bottom:8px;display:block}
+
+/* LANGUAGE GRID */
+.lang-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
 .lang-btn{background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);
-  border-radius:14px;padding:10px 6px;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
+  border-radius:14px;padding:9px 5px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
   transition:border-color .2s,background .2s,transform .15s;color:var(--text)}
 .lang-btn:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
 .lang-btn.active{border-color:var(--accent);background:rgba(247,201,72,.12)}
-.lang-flag{font-size:1.6rem;line-height:1}
-.lang-name{font-size:.75rem;font-weight:700;color:var(--muted)}
+.lang-flag{font-size:1.5rem;line-height:1}
+.lang-name{font-size:.72rem;font-weight:700;color:var(--muted)}
 .lang-btn.active .lang-name{color:var(--accent)}
+
+/* TRANSLATION SETTINGS */
+.trans-section{background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.18);
+               border-radius:16px;padding:14px;margin-bottom:18px}
+.trans-toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
+.trans-toggle-row.open{margin-bottom:12px}
+.toggle-label{font-size:.88rem;font-weight:700;color:var(--teal)}
+.toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:rgba(255,255,255,.15);border-radius:999px;cursor:pointer;transition:.3s}
+.slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;
+               background:#fff;border-radius:50%;transition:.3s}
+input:checked+.slider{background:var(--teal)}
+input:checked+.slider:before{transform:translateX(20px)}
+
+.trans-lang-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tlang-btn{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:7px 4px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  transition:border-color .2s,background .2s;color:var(--text)}
+.tlang-btn:hover{background:rgba(255,255,255,.1)}
+.tlang-btn.active{border-color:var(--teal);background:rgba(78,205,196,.12)}
+.tlang-flag{font-size:1.2rem;line-height:1}
+.tlang-name{font-size:.68rem;font-weight:700;color:var(--muted)}
+.tlang-btn.active .tlang-name{color:var(--teal)}
 
 /* SETUP */
 textarea{width:100%;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);
@@ -45,68 +89,65 @@ textarea{width:100%;background:rgba(255,255,255,.05);border:2px solid rgba(255,2
          font-size:1rem;resize:vertical;outline:none;min-height:110px;transition:border-color .2s}
 textarea:focus{border-color:var(--accent)}
 .upload-area{width:100%;margin-top:12px;border:2px dashed rgba(255,255,255,.15);border-radius:14px;
-  padding:16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;
+  padding:14px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;
   background:rgba(255,255,255,.03)}
 .upload-area:hover{border-color:var(--teal);background:rgba(78,205,196,.06)}
 .upload-area input{display:none}
-.upload-icon{font-size:1.6rem;margin-bottom:4px}
-.upload-label{font-size:.85rem;color:var(--muted)}
+.upload-icon{font-size:1.4rem;margin-bottom:3px}
+.upload-label{font-size:.83rem;color:var(--muted)}
 .upload-label span{color:var(--teal);font-weight:700}
-.file-name{font-size:.82rem;color:var(--green);margin-top:5px;font-style:italic}
-.sent-preview{margin-top:14px;display:none}
+.file-name{font-size:.8rem;color:var(--green);margin-top:4px;font-style:italic}
+.sent-preview{margin-top:12px;display:none}
 .sent-preview.show{display:block}
-.sent-count{font-size:.82rem;color:var(--teal);margin-bottom:8px;font-weight:700}
-.sent-list{max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
-.sent-item{background:rgba(255,255,255,.04);border-radius:8px;padding:6px 11px;
-           font-size:.83rem;color:var(--muted);border-left:3px solid rgba(255,255,255,.1);
+.sent-count{font-size:.8rem;color:var(--teal);margin-bottom:6px;font-weight:700}
+.sent-list{max-height:110px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.sent-item{background:rgba(255,255,255,.04);border-radius:8px;padding:5px 10px;
+           font-size:.81rem;color:var(--muted);border-left:3px solid rgba(255,255,255,.1);
            white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.big{width:100%;margin-top:16px;background:linear-gradient(135deg,var(--accent),#e8b800);
-     color:#1a1a00;font-family:'Fredoka One',cursive;font-size:1.2rem;border:none;
-     border-radius:14px;padding:14px;cursor:pointer;box-shadow:0 4px 20px rgba(247,201,72,.35);transition:transform .15s}
+.big{width:100%;margin-top:14px;background:linear-gradient(135deg,var(--accent),#e8b800);
+     color:#1a1a00;font-family:'Fredoka One',cursive;font-size:1.15rem;border:none;
+     border-radius:14px;padding:13px;cursor:pointer;box-shadow:0 4px 20px rgba(247,201,72,.35);transition:transform .15s}
 .big:hover{transform:translateY(-2px)}
 .big:disabled{opacity:.4;cursor:default;transform:none}
 
 /* LEVEL */
-.sent-progress{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.sp-label{font-size:.78rem;color:var(--muted);flex-shrink:0}
-.sp-dots{display:flex;gap:5px;flex-wrap:wrap}
+.sent-progress{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.sp-label{font-size:.76rem;color:var(--muted);flex-shrink:0}
+.sp-dots{display:flex;gap:5px;flex-wrap:wrap;flex:1}
 .sp-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all .3s}
 .sp-dot.done{background:var(--green)}.sp-dot.active{background:var(--accent);transform:scale(1.4)}
-.lang-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(247,201,72,.1);
-            border:1px solid rgba(247,201,72,.25);border-radius:999px;
-            padding:3px 10px;font-size:.78rem;color:var(--accent);font-weight:700;margin-left:auto}
+.lang-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(247,201,72,.1);
+            border:1px solid rgba(247,201,72,.22);border-radius:999px;
+            padding:3px 9px;font-size:.76rem;color:var(--accent);font-weight:700;flex-shrink:0}
 
 .lhdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .dot{width:13px;height:13px;border-radius:50%;background:var(--muted);transition:all .3s;flex-shrink:0}
 .dot.active{background:var(--accent);transform:scale(1.5)}.dot.done{background:var(--green)}
-.lname{font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--teal)}
-.instr{font-size:.84rem;color:var(--muted);line-height:1.6;
-       background:rgba(255,255,255,.04);border-radius:10px;padding:9px 13px;margin-bottom:12px}
+.lname{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--teal)}
+.instr{font-size:.82rem;color:var(--muted);line-height:1.6;
+       background:rgba(255,255,255,.04);border-radius:10px;padding:8px 12px;margin-bottom:10px}
 
 /* TTS BANNER */
-.tts-banner{
-  display:flex;align-items:center;gap:12px;
-  background:rgba(78,205,196,.1);border:1px solid rgba(78,205,196,.3);
-  border-radius:14px;padding:12px 16px;margin-bottom:12px;
-}
+.tts-banner{display:flex;align-items:center;gap:10px;background:rgba(78,205,196,.1);
+  border:1px solid rgba(78,205,196,.3);border-radius:14px;padding:10px 14px;margin-bottom:10px}
 .tts-banner.hidden{display:none}
-.tts-icon{font-size:1.6rem;animation:speakpulse 0.6s ease-in-out infinite alternate;flex-shrink:0}
+.tts-icon{font-size:1.4rem;animation:speakpulse .6s ease-in-out infinite alternate;flex-shrink:0}
 @keyframes speakpulse{0%{transform:scale(1)}100%{transform:scale(1.2)}}
-.tts-text{font-size:.9rem;color:var(--teal);font-weight:700;flex:1}
+.tts-text{font-size:.86rem;color:var(--teal);font-weight:700;flex:1}
 .tts-again{background:rgba(78,205,196,.15);border:1px solid rgba(78,205,196,.3);
-           color:var(--teal);border-radius:10px;padding:6px 14px;cursor:pointer;
-           font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;
+           color:var(--teal);border-radius:8px;padding:5px 12px;cursor:pointer;
+           font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;
            transition:background .2s;white-space:nowrap}
 .tts-again:hover{background:rgba(78,205,196,.28)}
 
 /* KARAOKE */
 .karaoke-wrap{background:rgba(255,255,255,.04);border-radius:18px;
-  padding:22px 20px;margin:10px 0;font-size:1.28rem;font-weight:700;line-height:2.2;
-  text-align:center;word-break:break-word;min-height:80px;position:relative;transition:background .5s}
+  padding:20px 18px;margin:10px 0;font-size:1.22rem;font-weight:700;line-height:2.1;
+  text-align:center;word-break:break-word;min-height:75px;position:relative;transition:background .5s}
 .karaoke-wrap.flash{animation:flash .8s ease}
 @keyframes flash{40%{background:rgba(107,203,119,.22)}}
-.ghost-text{position:absolute;inset:0;border-radius:18px;padding:22px 20px;pointer-events:none;
-  font-size:1.28rem;font-weight:700;line-height:2.2;text-align:center;
+.ghost-text{position:absolute;inset:0;border-radius:18px;padding:20px 18px;pointer-events:none;
+  font-size:1.22rem;font-weight:700;line-height:2.1;text-align:center;
   color:rgba(240,240,248,.11);opacity:0;transition:opacity 1.4s;word-break:break-word}
 .ghost-text.show{opacity:1}
 
@@ -116,7 +157,7 @@ textarea:focus{border-color:var(--accent)}
 .kw.todo{color:rgba(240,240,248,.25)}
 .kw.interim{color:#fff;text-shadow:0 0 20px rgba(255,255,255,.6);animation:none}
 .kw.blank{color:transparent;background:rgba(255,255,255,.1);border-radius:5px;border-bottom:2px solid rgba(255,255,255,.22);padding:0 3px}
-.kw.blank.cur{color:transparent;background:rgba(255,107,157,.18);border-bottom:2px solid var(--pink);text-shadow:none;animation:kpulse .9s ease-in-out infinite}
+.kw.blank.cur{color:transparent;background:rgba(255,107,157,.18);border-bottom:2px solid var(--pink);animation:kpulse .9s ease-in-out infinite}
 .kw.blank.interim{color:var(--text);background:rgba(255,255,255,.2);border-bottom:2px solid #fff;animation:none}
 .kw.blank.done{color:var(--accent);background:rgba(247,201,72,.13);border-bottom:2px solid var(--accent)}
 .kw.blank.hint-show{color:var(--orange)!important;background:rgba(255,170,0,.15)!important;border-bottom:2px solid var(--orange)!important}
@@ -127,63 +168,75 @@ textarea:focus{border-color:var(--accent)}
 .kw.hint-show{color:var(--orange)!important;text-shadow:0 0 12px rgba(255,170,0,.4)!important;animation:none!important}
 @keyframes kpulse{0%,100%{text-shadow:0 0 8px rgba(255,107,157,.6)}50%{text-shadow:0 0 26px rgba(255,107,157,.95)}}
 
-.prog{background:rgba(255,255,255,.07);border-radius:999px;height:8px;overflow:hidden;margin:0 0 10px}
+/* TRANSLATION DISPLAY */
+.trans-display{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:10px 16px;margin-top:-4px;margin-bottom:10px;
+  font-size:.9rem;color:rgba(240,240,248,.35);font-style:italic;
+  text-align:center;line-height:1.6;min-height:36px;
+  transition:opacity .3s;
+}
+.trans-display.loading{color:rgba(240,240,248,.2)}
+.trans-display.hidden{display:none}
+
+/* PROGRESS */
+.prog{background:rgba(255,255,255,.07);border-radius:999px;height:7px;overflow:hidden;margin:0 0 10px}
 .pfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--accent));width:0;transition:width .3s ease}
 
 .mic-status-wrap{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);
-  border-radius:12px;padding:8px 14px;margin-bottom:10px;min-height:40px}
+  border-radius:12px;padding:7px 12px;margin-bottom:8px;min-height:38px}
 .mic-wave{display:flex;gap:3px;align-items:center;flex-shrink:0}
-.mic-wave span{display:block;width:3px;background:var(--teal);border-radius:99px;height:8px;opacity:.3}
+.mic-wave span{display:block;width:3px;background:var(--teal);border-radius:99px;height:7px;opacity:.3}
 .mic-wave.active span{opacity:1}
 .mic-wave.active span:nth-child(1){animation:wave .8s ease-in-out infinite 0.0s}
 .mic-wave.active span:nth-child(2){animation:wave .8s ease-in-out infinite .15s}
 .mic-wave.active span:nth-child(3){animation:wave .8s ease-in-out infinite .3s}
 .mic-wave.active span:nth-child(4){animation:wave .8s ease-in-out infinite .45s}
 .mic-wave.active span:nth-child(5){animation:wave .8s ease-in-out infinite .6s}
-@keyframes wave{0%,100%{height:4px}50%{height:18px}}
-.mic-status-text{font-size:.84rem;color:var(--teal);font-style:italic;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@keyframes wave{0%,100%{height:4px}50%{height:16px}}
+.mic-status-text{font-size:.82rem;color:var(--teal);font-style:italic;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mic-status-text.idle{color:var(--muted);font-style:normal}
 
-.mic-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:6px 0 4px}
-#micBtn{width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;font-size:1.9rem;
+.mic-wrap{display:flex;flex-direction:column;align-items:center;gap:7px;margin:5px 0 3px}
+#micBtn{width:68px;height:68px;border-radius:50%;border:none;cursor:pointer;font-size:1.8rem;
         display:flex;align-items:center;justify-content:center;
         background:linear-gradient(135deg,var(--pink),#c23a7d);
         box-shadow:0 4px 22px rgba(255,107,157,.4);transition:transform .15s}
 #micBtn:hover{transform:scale(1.08)}
 #micBtn.rec{background:linear-gradient(135deg,#ff3d3d,#b81a1a);animation:mpulse 1s ease-in-out infinite}
 #micBtn:disabled{opacity:.4;cursor:default;transform:none!important;animation:none}
-@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,61,61,.55)}50%{box-shadow:0 0 0 18px rgba(255,61,61,0)}}
-.mlbl{font-size:.84rem;color:var(--muted);text-align:center}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,61,61,.55)}50%{box-shadow:0 0 0 16px rgba(255,61,61,0)}}
+.mlbl{font-size:.82rem;color:var(--muted);text-align:center}
 .mlbl.rec{color:var(--teal);font-weight:700}
 
 .hint-box{background:rgba(247,201,72,.08);border:1px solid rgba(247,201,72,.28);
-          border-radius:12px;padding:9px 13px;font-size:.84rem;
-          color:rgba(247,201,72,.92);margin-bottom:10px;line-height:1.55;display:none}
+          border-radius:12px;padding:8px 12px;font-size:.82rem;
+          color:rgba(247,201,72,.92);margin-bottom:8px;line-height:1.55;display:none}
 .hint-box.on{display:block}
 .err{background:rgba(255,100,61,.1);border:1px solid rgba(255,100,61,.3);
-     border-radius:12px;padding:9px 13px;font-size:.84rem;color:#ff8f6b;margin-bottom:10px;display:none}
+     border-radius:12px;padding:8px 12px;font-size:.82rem;color:#ff8f6b;margin-bottom:8px;display:none}
 .err.on{display:block}
 
-.res{text-align:center;padding:12px 0;display:none}
+.res{text-align:center;padding:10px 0;display:none}
 .res.on{display:block}
-.ri{font-size:2.5rem;margin-bottom:4px}
-.rm{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--green);margin-bottom:14px}
+.ri{font-size:2.2rem;margin-bottom:4px}
+.rm{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--green);margin-bottom:12px}
 .brow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .bsec{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--text);
-      font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;
-      border-radius:12px;padding:10px 20px;cursor:pointer;transition:background .2s}
+      font-family:'Nunito',sans-serif;font-weight:700;font-size:.88rem;
+      border-radius:12px;padding:9px 18px;cursor:pointer;transition:background .2s}
 .bsec:hover{background:rgba(255,255,255,.14)}
 .bpri{background:linear-gradient(135deg,var(--green),#3a9f44);color:#0a1a0b;
-      font-family:'Fredoka One',cursive;font-size:.95rem;border:none;
-      border-radius:12px;padding:10px 24px;cursor:pointer;
+      font-family:'Fredoka One',cursive;font-size:.92rem;border:none;
+      border-radius:12px;padding:9px 22px;cursor:pointer;
       box-shadow:0 4px 14px rgba(107,203,119,.32);transition:transform .15s}
 .bpri:hover{transform:translateY(-2px)}
-.mt{margin-top:8px;text-align:center}
+.mt{margin-top:6px;text-align:center}
 
 .alldone{text-align:center}
-.trophy{font-size:5rem;display:block;animation:float 2.2s ease-in-out infinite;margin-bottom:12px}
+.trophy{font-size:4.5rem;display:block;animation:float 2.2s ease-in-out infinite;margin-bottom:12px}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-.alldone p{color:var(--muted);margin-bottom:22px}
+.alldone p{color:var(--muted);margin-bottom:20px}
 .hidden{display:none!important}
 .sent-list::-webkit-scrollbar{width:4px}
 .sent-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:99px}
@@ -191,21 +244,46 @@ textarea:focus{border-color:var(--accent)}
 </head>
 <body>
 
-<h1>📖 Olvasás Gyakorló</h1>
-<p class="sub" id="appSub">Tanulj meg szöveget fejből – mondatról mondatra</p>
+<!-- TOP BAR – always visible -->
+<div class="topbar">
+  <h1>📖 Olvasás Gyakorló</h1>
+  <button class="exit-btn hidden" id="exitBtn" onclick="exitToHome()">🏠 Kilépés</button>
+</div>
+<p class="sub" id="appSub"></p>
 
 <div class="card">
 
-  <!-- SETUP -->
+  <!-- ── SETUP ── -->
   <div id="sSetup">
-    <span class="lbl" id="lblLang">Válassz nyelvet:</span>
+    <span class="lbl" id="lblLang"></span>
     <div class="lang-grid">
       <button class="lang-btn active" onclick="setLang('hu')" id="langHU"><span class="lang-flag">🇭🇺</span><span class="lang-name">Magyar</span></button>
       <button class="lang-btn" onclick="setLang('en')" id="langEN"><span class="lang-flag">🇬🇧</span><span class="lang-name">English</span></button>
       <button class="lang-btn" onclick="setLang('de')" id="langDE"><span class="lang-flag">🇩🇪</span><span class="lang-name">Deutsch</span></button>
       <button class="lang-btn" onclick="setLang('es')" id="langES"><span class="lang-flag">🇪🇸</span><span class="lang-name">Español</span></button>
     </div>
-    <span class="lbl" id="lblText">Írd be vagy illeszd be a szöveget:</span>
+
+    <!-- Translation settings -->
+    <div class="trans-section">
+      <div class="trans-toggle-row" id="transToggleRow">
+        <span class="toggle-label" id="transToggleLabel"></span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="transToggle" onchange="onTransToggle()">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div id="transLangPicker" class="hidden" style="margin-top:12px">
+        <span class="lbl" id="lblTransLang" style="margin-bottom:8px"></span>
+        <div class="trans-lang-grid">
+          <button class="tlang-btn" onclick="setTransLang('hu')" id="tlangHU"><span class="tlang-flag">🇭🇺</span><span class="tlang-name">Magyar</span></button>
+          <button class="tlang-btn" onclick="setTransLang('en')" id="tlangEN"><span class="tlang-flag">🇬🇧</span><span class="tlang-name">English</span></button>
+          <button class="tlang-btn" onclick="setTransLang('de')" id="tlangDE"><span class="tlang-flag">🇩🇪</span><span class="tlang-name">Deutsch</span></button>
+          <button class="tlang-btn" onclick="setTransLang('es')" id="tlangES"><span class="tlang-flag">🇪🇸</span><span class="tlang-name">Español</span></button>
+        </div>
+      </div>
+    </div>
+
+    <span class="lbl" id="lblText"></span>
     <textarea id="sinput" placeholder=""></textarea>
     <div class="upload-area" onclick="document.getElementById('fileInput').click()">
       <input type="file" id="fileInput" accept=".txt,.md" onchange="loadFile(event)">
@@ -217,10 +295,10 @@ textarea:focus{border-color:var(--accent)}
       <div class="sent-count" id="sentCount"></div>
       <div class="sent-list" id="sentList"></div>
     </div>
-    <button class="big" id="startBtn" onclick="startPractice()" disabled>🚀</button>
+    <button class="big" id="startBtn" onclick="startPractice()" disabled></button>
   </div>
 
-  <!-- LEVEL -->
+  <!-- ── LEVEL ── -->
   <div id="sLevel" class="hidden">
     <div class="sent-progress">
       <span class="sp-label" id="spLabel"></span>
@@ -235,7 +313,6 @@ textarea:focus{border-color:var(--accent)}
     <div class="hint-box" id="hintBox"></div>
     <div class="err" id="errBox"></div>
 
-    <!-- TTS banner (shown while speaking) -->
     <div class="tts-banner hidden" id="ttsBanner">
       <span class="tts-icon">🔊</span>
       <span class="tts-text" id="ttsText"></span>
@@ -246,6 +323,9 @@ textarea:focus{border-color:var(--accent)}
       <div class="ghost-text" id="ghostText"></div>
       <div id="karaokeText"></div>
     </div>
+
+    <!-- Translation display (shown below karaoke) -->
+    <div class="trans-display hidden" id="transDisplay"></div>
 
     <div class="prog"><div class="pfill" id="pfill"></div></div>
 
@@ -270,214 +350,194 @@ textarea:focus{border-color:var(--accent)}
     <div class="mt"><button class="bsec" id="retrySmall" onclick="retry()"></button></div>
   </div>
 
-  <!-- ALL DONE -->
+  <!-- ── ALL DONE ── -->
   <div id="sDone" class="hidden alldone">
     <span class="trophy">🏆</span>
-    <div class="rm" id="doneTitle" style="font-size:2rem"></div>
-    <p id="doneMsg" style="color:var(--muted);margin-bottom:22px"></p>
-    <button class="big" id="newTextBtn" onclick="resetAll()"></button>
+    <div class="rm" id="doneTitle" style="font-size:1.8rem"></div>
+    <p id="doneMsg" style="color:var(--muted);margin-bottom:20px"></p>
+    <button class="big" id="newTextBtn" onclick="exitToHome()"></button>
   </div>
 
 </div>
 
 <script>
-// ── LANGUAGES ──────────────────────────────────────────────────────
-const LANGS = {
-  hu:{ code:'hu-HU', flag:'🇭🇺', name:'Magyar', ui:{
+// ── LANGUAGE DEFINITIONS ───────────────────────────────────────────
+const LANGS={
+  hu:{code:'hu-HU',flag:'🇭🇺',name:'Magyar',ui:{
     sub:'Tanulj meg szöveget fejből – mondatról mondatra',
-    lblLang:'Válassz nyelvet:', lblText:'Írd be vagy illeszd be a szöveget:',
+    lblLang:'Tanulás nyelve:',lblText:'Írd be vagy illeszd be a szöveget:',
     placeholder:'Ide írj több mondatot. Minden mondatot külön kezeljük!\n\nPl.: A Nap süt. Szép idő van.',
     uploadLabel:'Kattints a <span>fájl feltöltéséhez</span> (.txt)',
-    startBtn:'🚀 Kezdjük el!', spLabel:'Mondatok:',
+    startBtn:'🚀 Kezdjük el!',spLabel:'Mondatok:',
     lvl:['1. szint: Olvasás','2. szint: Szavak nélkül','3. szint: Fejből!'],
-    instr:['📖 Figyelj a kiejtésre, majd olvasd fel hangosan! Amit kimondasz, azonnal sárgává válik.',
+    instr:['📖 Hallgasd meg a kiejtést, majd olvasd fel hangosan! Amit kimondasz, azonnal sárgává válik.',
            '🧩 Néhány szó el van takarva – emlékezz rájuk! Amit kimondasz, megjelenik.',
            '🧠 Üres képernyő – mondd fejből! A szavak ahogy mondod, fokozatosan megjelennek.'],
-    ttsSpeaking:'Hallgasd meg a helyes kiejtést…',
-    ttsDone:'Most te jössz!',
-    ttsAgain:'🔊 Újra',
-    micIdle:'Nyomd meg a mikrofont a kezdéshez',
-    micListening:'🎤 Hallgatlak…',
-    micLabel:'Nyomd meg, majd olvasd fel!',
-    micRecLabel:'🔴 Felvétel – olvasd fel!',
-    done:'✅ Kész!',
-    hintL2:'💡 A helyes szó narancsszínnel látható!',
-    hintL3:'💡 A következő szó narancsszínnel jelenik meg!',
-    successL1:'Remek! Szint teljesítve!', successL2:'Szuper! Tovább!',
-    successL3last:'Brávó! Az egész szöveg kész!', successL3next:'Brávó! Következő mondat!',
-    nextLevel:'➡️ Következő szint', nextSent:'➡️ Következő mondat', finish:'🏆 Befejezés',
-    retry:'🔄 Újra próbálom', retrySmall:'🔄 Újrakezdem a szintet',
-    doneTitle:'Minden mondat kész!', doneMsg:'Fantasztikus! Az egész szöveget megtanultad fejből! 🎉',
-    newText:'🔁 Új szöveg', sentCount:(n)=>n+' mondat:',
+    transToggle:'Fordítás megjelenítése',lblTransLang:'Fordítás nyelve:',
+    ttsSpeaking:'Hallgasd meg a helyes kiejtést…',ttsDone:'Most te jössz!',ttsAgain:'🔊 Újra',
+    micIdle:'Nyomd meg a mikrofont a kezdéshez',micListening:'🎤 Hallgatlak…',
+    micLabel:'Nyomd meg, majd olvasd fel!',micRecLabel:'🔴 Felvétel – olvasd fel!',done:'✅ Kész!',
+    hintL2:'💡 A helyes szó narancsszínnel látható!',hintL3:'💡 A következő szó narancsszínnel jelenik meg!',
+    successL1:'Remek! Szint teljesítve!',successL2:'Szuper! Tovább!',
+    successL3last:'Brávó! Az egész szöveg kész!',successL3next:'Brávó! Következő mondat!',
+    nextLevel:'➡️ Következő szint',nextSent:'➡️ Következő mondat',finish:'🏆 Befejezés',
+    retry:'🔄 Újra próbálom',retrySmall:'🔄 Újrakezdem a szintet',
+    doneTitle:'Minden mondat kész!',doneMsg:'Fantasztikus! Az egész szöveget megtanultad fejből! 🎉',
+    newText:'🔁 Új szöveg',sentCount:(n)=>n+' mondat:',exit:'🏠 Kilépés',
+    transLoading:'Fordítás betöltése…',
     errMic:'⚠️ Mikrofon hozzáférés megtagadva! Engedélyezd a böngészőben.',
     errBrowser:'⚠️ A böngésző nem támogatja a hangfelismerést. Használj Chrome-ot!',
   }},
-  en:{ code:'en-US', flag:'🇬🇧', name:'English', ui:{
+  en:{code:'en-US',flag:'🇬🇧',name:'English',ui:{
     sub:'Learn text by heart – sentence by sentence',
-    lblLang:'Choose language:', lblText:'Type or paste your text:',
+    lblLang:'Practice language:',lblText:'Type or paste your text:',
     placeholder:'Type multiple sentences here. Each sentence is practiced separately!\n\nE.g.: The sun shines. It is a nice day.',
     uploadLabel:'Click to <span>upload a file</span> (.txt)',
-    startBtn:'🚀 Let\'s start!', spLabel:'Sentences:',
+    startBtn:'🚀 Let\'s start!',spLabel:'Sentences:',
     lvl:['Level 1: Reading','Level 2: Missing words','Level 3: From memory!'],
     instr:['📖 Listen to the pronunciation, then read aloud! Words turn yellow as you say them.',
            '🧩 Some words are hidden – remember them! They appear as you say them.',
            '🧠 Blank screen – say it from memory! Words appear gradually as you speak.'],
-    ttsSpeaking:'Listen to the correct pronunciation…',
-    ttsDone:'Your turn!',
-    ttsAgain:'🔊 Again',
-    micIdle:'Press the microphone to start',
-    micListening:'🎤 Listening…',
-    micLabel:'Press, then read the sentence!',
-    micRecLabel:'🔴 Recording – read aloud!',
-    done:'✅ Done!',
-    hintL2:'💡 The correct word is shown in orange!',
-    hintL3:'💡 The next word is shown in orange!',
-    successL1:'Great! Level complete!', successL2:'Awesome! Keep going!',
-    successL3last:'Bravo! All text complete!', successL3next:'Bravo! Next sentence!',
-    nextLevel:'➡️ Next level', nextSent:'➡️ Next sentence', finish:'🏆 Finish',
-    retry:'🔄 Try again', retrySmall:'🔄 Restart level',
-    doneTitle:'All sentences done!', doneMsg:'Fantastic! You learned the entire text by heart! 🎉',
-    newText:'🔁 New text', sentCount:(n)=>n+' sentences:',
+    transToggle:'Show translation',lblTransLang:'Translation language:',
+    ttsSpeaking:'Listen to the correct pronunciation…',ttsDone:'Your turn!',ttsAgain:'🔊 Again',
+    micIdle:'Press the microphone to start',micListening:'🎤 Listening…',
+    micLabel:'Press, then read the sentence!',micRecLabel:'🔴 Recording – read aloud!',done:'✅ Done!',
+    hintL2:'💡 The correct word is shown in orange!',hintL3:'💡 The next word is shown in orange!',
+    successL1:'Great! Level complete!',successL2:'Awesome! Keep going!',
+    successL3last:'Bravo! All text complete!',successL3next:'Bravo! Next sentence!',
+    nextLevel:'➡️ Next level',nextSent:'➡️ Next sentence',finish:'🏆 Finish',
+    retry:'🔄 Try again',retrySmall:'🔄 Restart level',
+    doneTitle:'All sentences done!',doneMsg:'Fantastic! You learned the entire text by heart! 🎉',
+    newText:'🔁 New text',sentCount:(n)=>n+' sentences:',exit:'🏠 Exit',
+    transLoading:'Loading translation…',
     errMic:'⚠️ Microphone access denied! Allow it in your browser.',
     errBrowser:'⚠️ Your browser does not support speech recognition. Use Chrome!',
   }},
-  de:{ code:'de-DE', flag:'🇩🇪', name:'Deutsch', ui:{
+  de:{code:'de-DE',flag:'🇩🇪',name:'Deutsch',ui:{
     sub:'Lerne Texte auswendig – Satz für Satz',
-    lblLang:'Sprache wählen:', lblText:'Text eingeben oder einfügen:',
+    lblLang:'Lernsprache:',lblText:'Text eingeben oder einfügen:',
     placeholder:'Schreibe mehrere Sätze hierher.\n\nZ.B.: Die Sonne scheint. Es ist ein schöner Tag.',
     uploadLabel:'Klicke zum <span>Hochladen</span> (.txt)',
-    startBtn:'🚀 Los geht\'s!', spLabel:'Sätze:',
+    startBtn:'🚀 Los geht\'s!',spLabel:'Sätze:',
     lvl:['Stufe 1: Lesen','Stufe 2: Fehlende Wörter','Stufe 3: Auswendig!'],
     instr:['📖 Höre die Aussprache, dann lies laut vor! Gesprochene Wörter werden gelb.',
            '🧩 Einige Wörter sind verdeckt – erinnere dich! Sie erscheinen beim Sprechen.',
            '🧠 Leerer Bildschirm – sprich auswendig! Wörter erscheinen nach und nach.'],
-    ttsSpeaking:'Höre die richtige Aussprache…',
-    ttsDone:'Du bist dran!',
-    ttsAgain:'🔊 Nochmal',
-    micIdle:'Drücke das Mikrofon zum Starten',
-    micListening:'🎤 Ich höre zu…',
-    micLabel:'Drücken, dann laut vorlesen!',
-    micRecLabel:'🔴 Aufnahme – lies vor!',
-    done:'✅ Fertig!',
-    hintL2:'💡 Das richtige Wort ist orange markiert!',
-    hintL3:'💡 Das nächste Wort erscheint orange!',
-    successL1:'Super! Stufe geschafft!', successL2:'Toll! Weiter so!',
-    successL3last:'Bravo! Gesamter Text geschafft!', successL3next:'Bravo! Nächster Satz!',
-    nextLevel:'➡️ Nächste Stufe', nextSent:'➡️ Nächster Satz', finish:'🏆 Abschluss',
-    retry:'🔄 Nochmal versuchen', retrySmall:'🔄 Stufe neu starten',
-    doneTitle:'Alle Sätze fertig!', doneMsg:'Fantastisch! Du hast den gesamten Text auswendig gelernt! 🎉',
-    newText:'🔁 Neuer Text', sentCount:(n)=>n+' Sätze:',
+    transToggle:'Übersetzung anzeigen',lblTransLang:'Übersetzungssprache:',
+    ttsSpeaking:'Höre die richtige Aussprache…',ttsDone:'Du bist dran!',ttsAgain:'🔊 Nochmal',
+    micIdle:'Drücke das Mikrofon zum Starten',micListening:'🎤 Ich höre zu…',
+    micLabel:'Drücken, dann laut vorlesen!',micRecLabel:'🔴 Aufnahme – lies vor!',done:'✅ Fertig!',
+    hintL2:'💡 Das richtige Wort ist orange markiert!',hintL3:'💡 Das nächste Wort erscheint orange!',
+    successL1:'Super! Stufe geschafft!',successL2:'Toll! Weiter so!',
+    successL3last:'Bravo! Gesamter Text geschafft!',successL3next:'Bravo! Nächster Satz!',
+    nextLevel:'➡️ Nächste Stufe',nextSent:'➡️ Nächster Satz',finish:'🏆 Abschluss',
+    retry:'🔄 Nochmal versuchen',retrySmall:'🔄 Stufe neu starten',
+    doneTitle:'Alle Sätze fertig!',doneMsg:'Fantastisch! Du hast den gesamten Text auswendig gelernt! 🎉',
+    newText:'🔁 Neuer Text',sentCount:(n)=>n+' Sätze:',exit:'🏠 Beenden',
+    transLoading:'Übersetzung wird geladen…',
     errMic:'⚠️ Mikrofonzugriff verweigert! Erlaube ihn im Browser.',
     errBrowser:'⚠️ Dein Browser unterstützt keine Spracherkennung. Nutze Chrome!',
   }},
-  es:{ code:'es-ES', flag:'🇪🇸', name:'Español', ui:{
+  es:{code:'es-ES',flag:'🇪🇸',name:'Español',ui:{
     sub:'Aprende textos de memoria – frase por frase',
-    lblLang:'Elige el idioma:', lblText:'Escribe o pega el texto:',
+    lblLang:'Idioma de práctica:',lblText:'Escribe o pega el texto:',
     placeholder:'Escribe varias frases aquí.\n\nEj.: El sol brilla. Hace buen tiempo.',
     uploadLabel:'Haz clic para <span>subir un archivo</span> (.txt)',
-    startBtn:'🚀 ¡Empezamos!', spLabel:'Frases:',
+    startBtn:'🚀 ¡Empezamos!',spLabel:'Frases:',
     lvl:['Nivel 1: Lectura','Nivel 2: Palabras ocultas','Nivel 3: ¡De memoria!'],
     instr:['📖 Escucha la pronunciación, luego lee en voz alta. Las palabras se vuelven amarillas.',
            '🧩 Algunas palabras están ocultas – ¡recuérdalas! Aparecen al pronunciarlas.',
            '🧠 Pantalla en blanco – ¡dilo de memoria! Las palabras aparecen gradualmente.'],
-    ttsSpeaking:'Escucha la pronunciación correcta…',
-    ttsDone:'¡Tu turno!',
-    ttsAgain:'🔊 De nuevo',
-    micIdle:'Pulsa el micrófono para empezar',
-    micListening:'🎤 Escuchando…',
-    micLabel:'¡Pulsa y lee la frase en voz alta!',
-    micRecLabel:'🔴 Grabando – ¡lee en voz alta!',
-    done:'✅ ¡Listo!',
-    hintL2:'💡 ¡La palabra correcta aparece en naranja!',
-    hintL3:'💡 ¡La siguiente palabra aparece en naranja!',
-    successL1:'¡Genial! ¡Nivel completado!', successL2:'¡Estupendo! ¡Sigue así!',
-    successL3last:'¡Bravo! ¡Todo el texto completado!', successL3next:'¡Bravo! ¡Siguiente frase!',
-    nextLevel:'➡️ Siguiente nivel', nextSent:'➡️ Siguiente frase', finish:'🏆 Finalizar',
-    retry:'🔄 Intentar de nuevo', retrySmall:'🔄 Reiniciar nivel',
-    doneTitle:'¡Todas las frases completadas!', doneMsg:'¡Fantástico! ¡Has aprendido todo el texto de memoria! 🎉',
-    newText:'🔁 Nuevo texto', sentCount:(n)=>n+' frases:',
+    transToggle:'Mostrar traducción',lblTransLang:'Idioma de traducción:',
+    ttsSpeaking:'Escucha la pronunciación correcta…',ttsDone:'¡Tu turno!',ttsAgain:'🔊 De nuevo',
+    micIdle:'Pulsa el micrófono para empezar',micListening:'🎤 Escuchando…',
+    micLabel:'¡Pulsa y lee la frase en voz alta!',micRecLabel:'🔴 Grabando – ¡lee en voz alta!',done:'✅ ¡Listo!',
+    hintL2:'💡 ¡La palabra correcta aparece en naranja!',hintL3:'💡 ¡La siguiente palabra aparece en naranja!',
+    successL1:'¡Genial! ¡Nivel completado!',successL2:'¡Estupendo! ¡Sigue así!',
+    successL3last:'¡Bravo! ¡Todo el texto completado!',successL3next:'¡Bravo! ¡Siguiente frase!',
+    nextLevel:'➡️ Siguiente nivel',nextSent:'➡️ Siguiente frase',finish:'🏆 Finalizar',
+    retry:'🔄 Intentar de nuevo',retrySmall:'🔄 Reiniciar nivel',
+    doneTitle:'¡Todas las frases completadas!',doneMsg:'¡Fantástico! ¡Has aprendido todo el texto de memoria! 🎉',
+    newText:'🔁 Nuevo texto',sentCount:(n)=>n+' frases:',exit:'🏠 Salir',
+    transLoading:'Cargando traducción…',
     errMic:'⚠️ ¡Acceso al micrófono denegado! Permítelo en el navegador.',
     errBrowser:'⚠️ Tu navegador no soporta reconocimiento de voz. ¡Usa Chrome!',
   }}
 };
 
+// Translation language names per UI language
+const TRANS_LANG_NAMES={
+  hu:{hu:'Magyar',en:'Angol',de:'Német',es:'Spanyol'},
+  en:{hu:'Hungarian',en:'English',de:'German',es:'Spanish'},
+  de:{hu:'Ungarisch',en:'Englisch',de:'Deutsch',es:'Spanisch'},
+  es:{hu:'Húngaro',en:'Inglés',de:'Alemán',es:'Español'},
+};
+
+// MyMemory language codes
+const MYMEMORY_CODES={hu:'hu',en:'en',de:'de',es:'es'};
+
 // ── STATE ──────────────────────────────────────────────────────────
-let currentLang='hu';
+let currentLang='hu', transLang='en', showTrans=false;
 let sentences=[], sentIdx=0, words=[], level=1, wordIdx=0, attempts=0;
 let hintShown=false, ghostVis=false, finished=false;
 let recognition=null, isRec=false;
 let hintWords=new Set(), interimWordIdx=-1;
 let ttsActive=false;
+// Translation cache: key = sentIdx+transLang
+let transCache={};
 
-function L(){ return LANGS[currentLang].ui; }
+function L(){return LANGS[currentLang].ui;}
 
-// ── TTS ─────────────────────────────────────────────────────────
-function speak(text, onDone){
-  if(!window.speechSynthesis){ onDone && onDone(); return; }
-  window.speechSynthesis.cancel();
-  ttsActive=true;
-
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = LANGS[currentLang].code;
-  utter.rate = 0.88;
-  utter.pitch = 1.05;
-
-  // Try to pick a voice matching the language
-  const voices = window.speechSynthesis.getVoices();
-  const langCode = LANGS[currentLang].code.toLowerCase();
-  const match = voices.find(v=>v.lang.toLowerCase()===langCode)
-             || voices.find(v=>v.lang.toLowerCase().startsWith(langCode.split('-')[0]));
-  if(match) utter.voice=match;
-
-  // Show TTS banner
-  const banner=document.getElementById('ttsBanner');
-  const ttsTextEl=document.getElementById('ttsText');
-  const micBtn=document.getElementById('micBtn');
-  banner.classList.remove('hidden');
-  ttsTextEl.textContent=L().ttsSpeaking;
-  document.getElementById('ttsAgainBtn').textContent=L().ttsAgain;
-  micBtn.disabled=true;
-  setMicStatus('idle', L().ttsSpeaking);
-
-  utter.onend = () => {
-    ttsActive=false;
-    ttsTextEl.textContent=L().ttsDone;
-    micBtn.disabled=false;
-    setMicStatus('idle', L().micIdle);
-    onDone && onDone();
-  };
-  utter.onerror = () => {
-    ttsActive=false;
-    banner.classList.add('hidden');
-    micBtn.disabled=false;
-    setMicStatus('idle', L().micIdle);
-    onDone && onDone();
-  };
-
-  // Voices may not be ready immediately on mobile
-  if(voices.length===0){
-    window.speechSynthesis.onvoiceschanged=()=>{
-      const v2=window.speechSynthesis.getVoices();
-      const m2=v2.find(v=>v.lang.toLowerCase()===langCode)||v2.find(v=>v.lang.toLowerCase().startsWith(langCode.split('-')[0]));
-      if(m2) utter.voice=m2;
-      window.speechSynthesis.speak(utter);
-    };
-  } else {
-    window.speechSynthesis.speak(utter);
-  }
+// ── TRANSLATION ────────────────────────────────────────────────────
+async function fetchTranslation(text, fromLang, toLang){
+  const cacheKey=fromLang+'→'+toLang+':'+text;
+  if(transCache[cacheKey]) return transCache[cacheKey];
+  // Same language → no need to translate
+  if(fromLang===toLang) return text;
+  try{
+    const from=MYMEMORY_CODES[fromLang]||fromLang;
+    const to=MYMEMORY_CODES[toLang]||toLang;
+    const url=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+    const resp=await fetch(url);
+    const data=await resp.json();
+    const result=data?.responseData?.translatedText||text;
+    transCache[cacheKey]=result;
+    return result;
+  }catch(e){return text;}
 }
 
-function speakCurrentSentence(onDone){
-  const text = sentences[sentIdx];
-  speak(text, onDone);
+async function loadAndShowTranslation(){
+  const display=document.getElementById('transDisplay');
+  if(!showTrans){display.classList.add('hidden');return;}
+  display.classList.remove('hidden');
+  display.classList.add('loading');
+  display.textContent=L().transLoading;
+  const text=sentences[sentIdx]||'';
+  const translated=await fetchTranslation(text,currentLang,transLang);
+  display.classList.remove('loading');
+  display.textContent=translated===text&&currentLang!==transLang?'—':translated;
 }
 
-function speakAgain(){
-  if(ttsActive){ window.speechSynthesis.cancel(); ttsActive=false; }
-  stopRec();
-  document.getElementById('micBtn').disabled=true;
-  speakCurrentSentence(()=>{
-    document.getElementById('micBtn').disabled=false;
+// ── TRANSLATION UI ─────────────────────────────────────────────────
+function onTransToggle(){
+  showTrans=document.getElementById('transToggle').checked;
+  document.getElementById('transLangPicker').classList.toggle('hidden',!showTrans);
+  document.getElementById('transToggleRow').classList.toggle('open',showTrans);
+  updateTransLangBtns();
+}
+
+function setTransLang(code){
+  transLang=code;
+  updateTransLangBtns();
+}
+
+function updateTransLangBtns(){
+  ['hu','en','de','es'].forEach(l=>{
+    const btn=document.getElementById('tlang'+l.toUpperCase());
+    if(!btn)return;
+    btn.classList.toggle('active',l===transLang);
+    const names=TRANS_LANG_NAMES[currentLang]||TRANS_LANG_NAMES['en'];
+    btn.querySelector('.tlang-name').textContent=names[l]||l;
   });
 }
 
@@ -499,6 +559,25 @@ function applyUI(){
   document.getElementById('uploadLabel').innerHTML=u.uploadLabel;
   document.getElementById('startBtn').textContent=u.startBtn;
   document.getElementById('micStatusText').textContent=u.micIdle;
+  document.getElementById('transToggleLabel').textContent=u.transToggle;
+  document.getElementById('lblTransLang').textContent=u.lblTransLang;
+  document.getElementById('exitBtn').textContent=u.exit;
+  updateTransLangBtns();
+}
+
+// ── EXIT ──────────────────────────────────────────────────────────
+function exitToHome(){
+  stopRec();
+  window.speechSynthesis&&window.speechSynthesis.cancel();
+  document.getElementById('exitBtn').classList.add('hidden');
+  showScreen('sSetup');
+  // Reset state
+  sentences=[];sentIdx=0;wordIdx=0;level=1;attempts=0;
+  finished=false;hintShown=false;ghostVis=false;
+  document.getElementById('sinput').value='';
+  document.getElementById('sentPreview').classList.remove('show');
+  document.getElementById('startBtn').disabled=true;
+  document.getElementById('fileName').textContent='';
 }
 
 // ── SETUP ─────────────────────────────────────────────────────────
@@ -506,8 +585,8 @@ function parseSentences(text){
   const result=[];
   text.replace(/\r\n/g,'\n').split('\n').map(l=>l.trim()).filter(l=>l.length>1).forEach(line=>{
     const parts=line.match(/[^.!?]+[.!?]+|[^.!?]+$/g);
-    if(parts) parts.forEach(p=>{const t=p.trim();if(t.length>1)result.push(t);});
-    else if(line.trim().length>1) result.push(line.trim());
+    if(parts)parts.forEach(p=>{const t=p.trim();if(t.length>1)result.push(t);});
+    else if(line.trim().length>1)result.push(line.trim());
   });
   return result;
 }
@@ -546,10 +625,8 @@ function showScreen(id){
 function startPractice(){
   if(!sentences.length)return;
   sentIdx=0;level=1;attempts=0;
+  document.getElementById('exitBtn').classList.remove('hidden');
   showScreen('sLevel');buildSentDots();loadSentence();
-}
-function resetAll(){
-  stopRec();window.speechSynthesis&&window.speechSynthesis.cancel();showScreen('sSetup');
 }
 
 function buildSentDots(){
@@ -574,8 +651,7 @@ const BLANK=3;
 function blankSet(){const s=new Set();for(let i=BLANK-1;i<words.length;i+=BLANK)s.add(i);return s;}
 
 function setupLevel(){
-  wordIdx=0;finished=false;hintWords=new Set();interimWordIdx=-1;
-  attempts++;
+  wordIdx=0;finished=false;hintWords=new Set();interimWordIdx=-1;attempts++;
   const u=L();
   document.getElementById('resBox').classList.remove('on');
   document.getElementById('retrySmall').classList.remove('hidden');
@@ -588,7 +664,7 @@ function setupLevel(){
   document.getElementById('ttsBanner').classList.add('hidden');
   stopRec();
 
-  for(let i=1;i<=3;i++) document.getElementById('d'+i).className='dot'+(i<level?' done':i===level?' active':'');
+  for(let i=1;i<=3;i++)document.getElementById('d'+i).className='dot'+(i<level?' done':i===level?' active':'');
   document.getElementById('lname').textContent=u.lvl[level-1];
   document.getElementById('instr').textContent=u.instr[level-1];
   document.getElementById('spLabel').textContent=u.spLabel;
@@ -598,17 +674,53 @@ function setupLevel(){
   document.getElementById('retryBtn').textContent=u.retry;
   document.getElementById('retrySmall').textContent=u.retrySmall;
   document.getElementById('mlbl').textContent=u.micLabel;
+  document.getElementById('ttsAgainBtn').textContent=u.ttsAgain;
 
-  if(level===3) document.getElementById('ghostText').textContent=sentences[sentIdx];
+  if(level===3)document.getElementById('ghostText').textContent=sentences[sentIdx];
   renderKaraoke();
 
-  // Speak the sentence, then enable mic
+  // Load translation
+  loadAndShowTranslation();
+
+  // Speak sentence, then enable mic
   document.getElementById('micBtn').disabled=true;
-  setMicStatus('idle', u.ttsSpeaking);
+  setMicStatus('idle',u.ttsSpeaking);
   speakCurrentSentence(()=>{
     document.getElementById('micBtn').disabled=false;
-    setMicStatus('idle', u.micIdle);
+    setMicStatus('idle',u.micIdle);
   });
+}
+
+// ── TTS ───────────────────────────────────────────────────────────
+function speak(text,onDone){
+  if(!window.speechSynthesis){onDone&&onDone();return;}
+  window.speechSynthesis.cancel();ttsActive=true;
+  const utter=new SpeechSynthesisUtterance(text);
+  utter.lang=LANGS[currentLang].code;utter.rate=0.88;utter.pitch=1.05;
+  const voices=window.speechSynthesis.getVoices();
+  const lc=LANGS[currentLang].code.toLowerCase();
+  const match=voices.find(v=>v.lang.toLowerCase()===lc)||voices.find(v=>v.lang.toLowerCase().startsWith(lc.split('-')[0]));
+  if(match)utter.voice=match;
+  const banner=document.getElementById('ttsBanner');
+  banner.classList.remove('hidden');
+  document.getElementById('ttsText').textContent=L().ttsSpeaking;
+  utter.onend=()=>{ttsActive=false;document.getElementById('ttsText').textContent=L().ttsDone;onDone&&onDone();};
+  utter.onerror=()=>{ttsActive=false;banner.classList.add('hidden');onDone&&onDone();};
+  if(!voices.length){
+    window.speechSynthesis.onvoiceschanged=()=>{
+      const v2=window.speechSynthesis.getVoices();
+      const m2=v2.find(v=>v.lang.toLowerCase()===lc)||v2.find(v=>v.lang.toLowerCase().startsWith(lc.split('-')[0]));
+      if(m2)utter.voice=m2;window.speechSynthesis.speak(utter);
+    };
+  }else window.speechSynthesis.speak(utter);
+}
+
+function speakCurrentSentence(onDone){speak(sentences[sentIdx],onDone);}
+
+function speakAgain(){
+  if(ttsActive){window.speechSynthesis.cancel();ttsActive=false;}
+  stopRec();document.getElementById('micBtn').disabled=true;
+  speakCurrentSentence(()=>document.getElementById('micBtn').disabled=false);
 }
 
 // ── RENDER ────────────────────────────────────────────────────────
@@ -622,35 +734,31 @@ function renderKaraoke(){
       if(i<wordIdx)       {sp.className='kw done';sp.textContent=w;}
       else if(i===wordIdx){sp.className='kw cur'+(isInterim?' interim':'');sp.textContent=w;}
       else                {sp.className='kw todo';sp.textContent=w;}
-    } else if(level===2){
+    }else if(level===2){
       if(bl.has(i)){
         if(i<wordIdx)       {sp.className='kw blank done';sp.textContent=w;}
         else if(i===wordIdx){
           if(isHint)        {sp.className='kw blank hint-show';sp.textContent=w;}
           else if(isInterim){sp.className='kw blank interim';sp.textContent=w;}
           else              {sp.className='kw blank cur';sp.textContent=w;}
-        } else {
-          sp.className=isHint?'kw blank hint-show':'kw blank';sp.textContent=w;
-        }
-      } else {
+        }else{sp.className=isHint?'kw blank hint-show':'kw blank';sp.textContent=w;}
+      }else{
         if(i<wordIdx)       {sp.className='kw done';sp.textContent=w;}
         else if(i===wordIdx){sp.className='kw cur'+(isInterim?' interim':'');sp.textContent=w;}
         else                {sp.className='kw todo';sp.textContent=w;}
       }
-    } else {
+    }else{
       if(i<wordIdx)       {sp.className='kw revealed';sp.textContent=w;}
       else if(i===wordIdx){
         if(isHint)        {sp.className='kw hint-show';sp.textContent=w;}
         else if(isInterim){sp.className='kw cur-l3 interim';sp.textContent=w;}
         else              {sp.className='kw cur-l3';sp.textContent='▮';}
-      } else {
-        sp.className=isHint?'kw hint-show':'kw hidden';sp.textContent=w;
-      }
+      }else{sp.className=isHint?'kw hint-show':'kw hidden';sp.textContent=w;}
     }
-    if(i<words.length-1) sp.textContent+=' ';
+    if(i<words.length-1)sp.textContent+=' ';
     c.appendChild(sp);
   });
-  if(level===3&&ghostVis) document.getElementById('ghostText').classList.add('show');
+  if(level===3&&ghostVis)document.getElementById('ghostText').classList.add('show');
 }
 
 // ── MIC STATUS ────────────────────────────────────────────────────
@@ -667,8 +775,7 @@ function makeRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR)return null;
   const rec=new SR();
-  rec.lang=LANGS[currentLang].code;
-  rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=3;
+  rec.lang=LANGS[currentLang].code;rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=3;
   return rec;
 }
 
@@ -693,14 +800,11 @@ function attachHandlers(rec){
         document.getElementById('pfill').style.width=Math.min(100,wordIdx/words.length*100)+'%';
         applyHints();
         if(wordIdx>=words.length){
-          finished=true;stopRec();
-          setMicStatus('idle',L().done);
+          finished=true;stopRec();setMicStatus('idle',L().done);
           renderKaraoke();
           if(level===1)document.getElementById('karaokeWrap').classList.add('flash');
           setTimeout(showSuccess,500);
-        } else {
-          renderKaraoke();setMicStatus('listening',L().micListening);
-        }
+        }else{renderKaraoke();setMicStatus('listening',L().micListening);}
       }
     }
   };
@@ -764,8 +868,7 @@ function tryMatch(text,startIdx){
 }
 function tryMatchPartial(text,startIdx){
   if(startIdx>=words.length)return -1;
-  const spoken=norm(text).split(/\s+/).filter(Boolean);
-  const target=norm(words[startIdx]);
+  const spoken=norm(text).split(/\s+/).filter(Boolean);const target=norm(words[startIdx]);
   for(const s of spoken)if(s.length>=2&&(target.startsWith(s)||wordMatches(s,target)))return startIdx;
   return -1;
 }
@@ -785,8 +888,7 @@ function showErr(msg){const e=document.getElementById('errBox');e.textContent=ms
 function showSuccess(){
   const u=L(),isLast=sentIdx>=sentences.length-1;
   document.getElementById('rIcon').textContent=level>=3?(isLast?'🏆':'⭐'):'🌟';
-  document.getElementById('rMsg').textContent=
-    level===1?u.successL1:level===2?u.successL2:isLast?u.successL3last:u.successL3next;
+  document.getElementById('rMsg').textContent=level===1?u.successL1:level===2?u.successL2:isLast?u.successL3last:u.successL3next;
   document.getElementById('nextBtn').textContent=level<3?u.nextLevel:(isLast?u.finish:u.nextSent);
   document.getElementById('retryBtn').textContent=u.retry;
   document.getElementById('resBox').classList.add('on');
@@ -809,12 +911,15 @@ function nextAction(){
       document.getElementById('doneMsg').textContent=u.doneMsg;
       document.getElementById('newTextBtn').textContent=u.newText;
       showScreen('sDone');
-    } else {level=1;attempts=0;loadSentence();}
+    }else{level=1;attempts=0;loadSentence();}
   }
 }
 
 // Init
 applyUI();
+// Auto-select translation lang (not same as practice lang)
+transLang=currentLang==='hu'?'en':'hu';
+updateTransLangBtns();
 </script>
 </body>
 </html>
