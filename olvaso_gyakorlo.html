@@ -240,6 +240,88 @@ textarea:focus{border-color:var(--accent)}
 .hidden{display:none!important}
 .sent-list::-webkit-scrollbar{width:4px}
 .sent-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:99px}
+
+/* ── QUIZ ── */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.quiz-counter{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--teal)}
+.quiz-score-live{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--accent)}
+
+/* Translation prompt card */
+.quiz-prompt{
+  background:linear-gradient(135deg,rgba(78,205,196,.12),rgba(107,203,119,.08));
+  border:1.5px solid rgba(78,205,196,.3);border-radius:20px;
+  padding:22px 20px;margin-bottom:14px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.quiz-prompt::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 80% 20%,rgba(78,205,196,.08) 0%,transparent 60%);
+}
+.quiz-prompt-lang{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--teal);margin-bottom:8px;opacity:.8}
+.quiz-prompt-text{font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.5;position:relative}
+
+/* Answer area */
+.quiz-answer-wrap{
+  background:rgba(255,255,255,.04);border-radius:18px;
+  padding:20px 18px;margin-bottom:12px;
+  font-size:1.22rem;font-weight:700;line-height:2.1;
+  text-align:center;word-break:break-word;min-height:72px;
+  position:relative;transition:background .4s;
+}
+.quiz-answer-wrap.correct-flash{animation:qflash .7s ease}
+.quiz-answer-wrap.wrong-flash{animation:qwrong .5s ease}
+@keyframes qflash{40%{background:rgba(107,203,119,.22)}}
+@keyframes qwrong{20%,60%{background:rgba(255,100,61,.18)}0%,100%{background:rgba(255,255,255,.04)}}
+
+.qw{display:inline;white-space:pre-wrap;transition:color .2s}
+.qw.revealed{color:var(--accent)}
+.qw.hidden-slot{color:rgba(240,240,248,.15)}
+.qw.answer-shown{color:#ff8f6b}  /* revealed after 2nd fail */
+
+/* Attempt dots */
+.attempt-dots{display:flex;gap:6px;justify-content:center;margin-bottom:10px}
+.adot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);transition:background .3s}
+.adot.used{background:var(--pink)}
+.adot.correct{background:var(--green)}
+
+/* Quiz result banner */
+.quiz-result-banner{
+  border-radius:14px;padding:10px 14px;margin-bottom:12px;
+  font-size:.88rem;font-weight:700;text-align:center;
+  display:none;
+}
+.quiz-result-banner.show{display:block}
+.quiz-result-banner.success{background:rgba(107,203,119,.12);border:1px solid rgba(107,203,119,.3);color:var(--green)}
+.quiz-result-banner.fail{background:rgba(255,100,61,.1);border:1px solid rgba(255,100,61,.3);color:#ff8f6b}
+
+/* Progress bar for quiz */
+.quiz-prog{background:rgba(255,255,255,.07);border-radius:999px;height:6px;overflow:hidden;margin-bottom:12px}
+.quiz-pfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--green));width:0;transition:width .4s ease}
+
+/* Final score screen */
+.score-screen{text-align:center;padding:10px 0}
+.score-circle{
+  width:130px;height:130px;border-radius:50%;
+  background:conic-gradient(var(--accent) 0% var(--score-pct, 0%), rgba(255,255,255,.08) 0%);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 18px;position:relative;
+  box-shadow:0 0 40px rgba(247,201,72,.2);
+}
+.score-circle::before{
+  content:'';position:absolute;width:100px;height:100px;
+  background:var(--card);border-radius:50%;
+}
+.score-num{position:relative;z-index:1;font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--accent)}
+.score-label{font-size:.82rem;color:var(--muted);margin-top:4px}
+.score-grade{font-family:'Fredoka One',cursive;font-size:2rem;margin-bottom:6px}
+.score-msg{color:var(--muted);font-size:.9rem;margin-bottom:20px}
+.score-breakdown{display:flex;gap:16px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.score-stat{background:rgba(255,255,255,.05);border-radius:14px;padding:10px 18px;text-align:center}
+.score-stat-num{font-family:'Fredoka One',cursive;font-size:1.4rem}
+.score-stat-num.good{color:var(--green)}
+.score-stat-num.bad{color:var(--pink)}
+.score-stat-lbl{font-size:.72rem;color:var(--muted);margin-top:2px}
 </style>
 </head>
 <body>
@@ -350,7 +432,70 @@ textarea:focus{border-color:var(--accent)}
     <div class="mt"><button class="bsec" id="retrySmall" onclick="retry()"></button></div>
   </div>
 
+  <!-- ── QUIZ ── -->
+  <div id="sQuiz" class="hidden">
+    <!-- Score screen shown after all quiz cards -->
+    <div id="quizScore" class="hidden score-screen">
+      <div class="score-circle" id="scoreCircle">
+        <div>
+          <div class="score-num" id="scoreNum"></div>
+          <div class="score-label" id="scoreLbl"></div>
+        </div>
+      </div>
+      <div class="score-grade" id="scoreGrade"></div>
+      <div class="score-msg" id="scoreMsg"></div>
+      <div class="score-breakdown">
+        <div class="score-stat"><div class="score-stat-num good" id="statCorrect"></div><div class="score-stat-lbl" id="statCorrectLbl"></div></div>
+        <div class="score-stat"><div class="score-stat-num bad" id="statWrong"></div><div class="score-stat-lbl" id="statWrongLbl"></div></div>
+      </div>
+      <button class="big" id="quizDoneBtn" onclick="exitToHome()"></button>
+    </div>
+
+    <!-- Active quiz card -->
+    <div id="quizCard">
+      <div class="quiz-header">
+        <span class="quiz-counter" id="quizCounter"></span>
+        <span class="quiz-score-live" id="quizScoreLive"></span>
+      </div>
+
+      <!-- What language is shown / what to say -->
+      <div class="quiz-prompt">
+        <div class="quiz-prompt-lang" id="quizPromptLang"></div>
+        <div class="quiz-prompt-text" id="quizPromptText"></div>
+      </div>
+
+      <div class="quiz-result-banner" id="quizResultBanner"></div>
+
+      <!-- Answer display -->
+      <div class="quiz-answer-wrap" id="quizAnswerWrap">
+        <div id="quizAnswerText"></div>
+      </div>
+
+      <div class="attempt-dots" id="attemptDots">
+        <div class="adot" id="adot0"></div>
+        <div class="adot" id="adot1"></div>
+      </div>
+
+      <div class="quiz-prog"><div class="quiz-pfill" id="quizPfill"></div></div>
+
+      <div class="mic-status-wrap">
+        <div class="mic-wave" id="quizMicWave"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="mic-status-text idle" id="quizMicStatus"></div>
+      </div>
+
+      <div class="mic-wrap">
+        <button id="quizMicBtn" onclick="toggleQuizMic()">🎤</button>
+        <span class="mlbl" id="quizMlbl"></span>
+      </div>
+
+      <div class="mt" style="margin-top:12px">
+        <button class="bsec" id="quizSkipBtn" onclick="quizNext()"></button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── ALL DONE ── -->
+
   <div id="sDone" class="hidden alldone">
     <span class="trophy">🏆</span>
     <div class="rm" id="doneTitle" style="font-size:1.8rem"></div>
@@ -619,7 +764,7 @@ function updatePreview(){
 }
 
 function showScreen(id){
-  ['sSetup','sLevel','sDone'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));
+  ['sSetup','sLevel','sDone','sQuiz'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));
 }
 
 function startPractice(){
@@ -906,18 +1051,374 @@ function nextAction(){
   else{
     sentIdx++;
     if(sentIdx>=sentences.length){
-      const u=L();
-      document.getElementById('doneTitle').textContent=u.doneTitle;
-      document.getElementById('doneMsg').textContent=u.doneMsg;
-      document.getElementById('newTextBtn').textContent=u.newText;
-      showScreen('sDone');
+      // All sentences done – go to quiz if translation enabled, else done screen
+      if(showTrans&&transLang&&transLang!==currentLang){
+        showScreen('sQuiz');
+        document.getElementById('exitBtn').classList.remove('hidden');
+        startQuiz();
+      }else{
+        const u=L();
+        document.getElementById('doneTitle').textContent=u.doneTitle;
+        document.getElementById('doneMsg').textContent=u.doneMsg;
+        document.getElementById('newTextBtn').textContent=u.newText;
+        showScreen('sDone');
+      }
     }else{level=1;attempts=0;loadSentence();}
   }
 }
 
-// Init
+// ── QUIZ STATE ─────────────────────────────────────────────────────
+let quizItems=[];       // [{original, translation}]
+let quizIdx=0;
+let quizCorrect=0;
+let quizAttempt=0;      // 0 or 1 (max 2 attempts)
+let quizWords=[];       // words of current original sentence
+let quizRevealed=[];    // booleans per word
+let quizAnswered=false;
+let quizRec=null, quizRecActive=false;
+
+// UI strings for quiz per language
+const QUIZ_UI={
+  hu:{
+    title:'🎯 Kikérdezés',
+    promptLang:(f,t)=>`Fordítsd ${LANGS[t]?.name||t} → ${LANGS[f]?.name||f}`,
+    showIn:(l)=>`Látod: ${LANGS[l]?.name||l}`,
+    sayIn:(l)=>`Mondd ${LANGS[l]?.name||l}ul`,
+    counter:(i,n)=>`${i}. kérdés / ${n}`,
+    score:(c,n)=>`✅ ${c}/${n}`,
+    correct:'🎉 Helyes!',
+    wrong:'❌ Nem sikerült – a helyes válasz:',
+    skip:'⏭ Kihagyom',
+    next:'➡️ Következő',
+    micLabel:'Nyomd meg és mondd!',
+    micRec:'🔴 Hallgatlak…',
+    listening:'🎤 Hallgatlak…',
+    idle:'Nyomd meg a mikrofont',
+    grade:(pct)=>pct>=90?'🏆 Fantasztikus!':pct>=70?'⭐ Nagyon jó!':pct>=50?'👍 Jó munka!':'💪 Gyakorolj tovább!',
+    msg:(c,n)=>`${c} helyes válasz ${n}-ből`,
+    statCorrect:'Helyes',statWrong:'Hibás',
+    doneBtn:'🔁 Új szöveg',
+    pct:'%',
+  },
+  en:{
+    title:'🎯 Quiz',
+    promptLang:(f,t)=>`Translate ${LANGS[t]?.name||t} → ${LANGS[f]?.name||f}`,
+    showIn:(l)=>`Shown in: ${LANGS[l]?.name||l}`,
+    sayIn:(l)=>`Say it in ${LANGS[l]?.name||l}`,
+    counter:(i,n)=>`Question ${i} of ${n}`,
+    score:(c,n)=>`✅ ${c}/${n}`,
+    correct:'🎉 Correct!',
+    wrong:'❌ Not quite – correct answer:',
+    skip:'⏭ Skip',
+    next:'➡️ Next',
+    micLabel:'Press and speak!',
+    micRec:'🔴 Listening…',
+    listening:'🎤 Listening…',
+    idle:'Press the microphone',
+    grade:(pct)=>pct>=90?'🏆 Fantastic!':pct>=70?'⭐ Very good!':pct>=50?'👍 Good job!':'💪 Keep practising!',
+    msg:(c,n)=>`${c} correct out of ${n}`,
+    statCorrect:'Correct',statWrong:'Wrong',
+    doneBtn:'🔁 New text',
+    pct:'%',
+  },
+  de:{
+    title:'🎯 Quiz',
+    promptLang:(f,t)=>`Übersetze ${LANGS[t]?.name||t} → ${LANGS[f]?.name||f}`,
+    showIn:(l)=>`Angezeigt auf: ${LANGS[l]?.name||l}`,
+    sayIn:(l)=>`Sage es auf ${LANGS[l]?.name||l}`,
+    counter:(i,n)=>`Frage ${i} von ${n}`,
+    score:(c,n)=>`✅ ${c}/${n}`,
+    correct:'🎉 Richtig!',
+    wrong:'❌ Leider falsch – richtige Antwort:',
+    skip:'⏭ Überspringen',
+    next:'➡️ Weiter',
+    micLabel:'Drücken und sprechen!',
+    micRec:'🔴 Aufnahme…',
+    listening:'🎤 Ich höre zu…',
+    idle:'Mikrofon drücken',
+    grade:(pct)=>pct>=90?'🏆 Fantastisch!':pct>=70?'⭐ Sehr gut!':pct>=50?'👍 Gute Arbeit!':'💪 Weiter üben!',
+    msg:(c,n)=>`${c} richtig von ${n}`,
+    statCorrect:'Richtig',statWrong:'Falsch',
+    doneBtn:'🔁 Neuer Text',
+    pct:'%',
+  },
+  es:{
+    title:'🎯 Cuestionario',
+    promptLang:(f,t)=>`Traduce ${LANGS[t]?.name||t} → ${LANGS[f]?.name||f}`,
+    showIn:(l)=>`Mostrado en: ${LANGS[l]?.name||l}`,
+    sayIn:(l)=>`Dilo en ${LANGS[l]?.name||l}`,
+    counter:(i,n)=>`Pregunta ${i} de ${n}`,
+    score:(c,n)=>`✅ ${c}/${n}`,
+    correct:'🎉 ¡Correcto!',
+    wrong:'❌ No es correcto – respuesta correcta:',
+    skip:'⏭ Saltar',
+    next:'➡️ Siguiente',
+    micLabel:'¡Pulsa y habla!',
+    micRec:'🔴 Escuchando…',
+    listening:'🎤 Escuchando…',
+    idle:'Pulsa el micrófono',
+    grade:(pct)=>pct>=90?'🏆 ¡Fantástico!':pct>=70?'⭐ ¡Muy bien!':pct>=50?'👍 ¡Buen trabajo!':'💪 ¡Sigue practicando!',
+    msg:(c,n)=>`${c} correctas de ${n}`,
+    statCorrect:'Correctas',statWrong:'Incorrectas',
+    doneBtn:'🔁 Nuevo texto',
+    pct:'%',
+  },
+};
+function QU(){return QUIZ_UI[currentLang]||QUIZ_UI.en;}
+
+// ── START QUIZ ──────────────────────────────────────────────────────
+async function startQuiz(){
+  // Need translations to build quiz
+  if(!showTrans||sentences.length===0){
+    // If no translation configured, show notice and skip to home
+    exitToHome();return;
+  }
+  stopRec();
+  window.speechSynthesis&&window.speechSynthesis.cancel();
+
+  // Build quiz items: fetch all translations
+  quizItems=[];
+  const display=document.getElementById('transDisplay');
+  showScreen('sQuiz');
+  document.getElementById('quizCard').classList.remove('hidden');
+  document.getElementById('quizScore').classList.add('hidden');
+  document.getElementById('quizMicStatus').textContent='Fordítások betöltése…';
+  document.getElementById('quizMicBtn').disabled=true;
+
+  for(let i=0;i<sentences.length;i++){
+    const orig=sentences[i];
+    const trans=await fetchTranslation(orig,currentLang,transLang);
+    if(trans&&trans!==orig) quizItems.push({original:orig,translation:trans});
+  }
+
+  if(quizItems.length===0){exitToHome();return;}
+
+  // Shuffle
+  for(let i=quizItems.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [quizItems[i],quizItems[j]]=[quizItems[j],quizItems[i]];
+  }
+
+  quizIdx=0;quizCorrect=0;
+  loadQuizCard();
+}
+
+function loadQuizCard(){
+  const qu=QU();
+  const item=quizItems[quizIdx];
+  quizAttempt=0;quizAnswered=false;
+  quizWords=item.original.split(/\s+/).filter(Boolean);
+  quizRevealed=quizWords.map(()=>false);
+
+  // Reset UI
+  document.getElementById('quizResultBanner').classList.remove('show');
+  document.getElementById('quizResultBanner').className='quiz-result-banner';
+  document.getElementById('quizAnswerWrap').classList.remove('correct-flash','wrong-flash');
+  document.getElementById('quizSkipBtn').textContent=qu.skip;
+
+  // Header
+  document.getElementById('quizCounter').textContent=qu.counter(quizIdx+1,quizItems.length);
+  document.getElementById('quizScoreLive').textContent=qu.score(quizCorrect,quizIdx);
+
+  // Prompt: show translation, ask for original
+  document.getElementById('quizPromptLang').textContent=qu.promptLang(currentLang,transLang);
+  document.getElementById('quizPromptText').textContent=item.translation;
+
+  // Attempt dots
+  document.getElementById('adot0').className='adot';
+  document.getElementById('adot1').className='adot';
+
+  // Progress
+  document.getElementById('quizPfill').style.width=(quizIdx/quizItems.length*100)+'%';
+
+  // Answer slots
+  renderQuizAnswer(false);
+
+  // Mic
+  setQuizMicStatus('idle',qu.idle);
+  document.getElementById('quizMicBtn').disabled=false;
+  document.getElementById('quizMicBtn').classList.remove('rec');
+  document.getElementById('quizMicBtn').textContent='🎤';
+  document.getElementById('quizMlbl').textContent=qu.micLabel;
+  document.getElementById('quizMlbl').classList.remove('rec');
+  stopQuizRec();
+}
+
+function renderQuizAnswer(showAll){
+  const c=document.getElementById('quizAnswerText');c.innerHTML='';
+  quizWords.forEach((w,i)=>{
+    const sp=document.createElement('span');
+    sp.className='qw';
+    if(showAll||quizRevealed[i]){
+      sp.className='qw '+(showAll&&!quizRevealed[i]?'answer-shown':'revealed');
+      sp.textContent=w;
+    }else{
+      sp.className='qw hidden-slot';
+      // Show blank underscores same width as word
+      sp.textContent='_'.repeat(Math.max(2,w.length));
+    }
+    if(i<quizWords.length-1)sp.textContent+=' ';
+    c.appendChild(sp);
+  });
+}
+
+// ── QUIZ MIC ────────────────────────────────────────────────────────
+function toggleQuizMic(){if(quizRecActive)stopQuizRec();else startQuizRec();}
+
+function startQuizRec(){
+  if(quizAnswered)return;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return;
+  const rec=new SR();
+  rec.lang=LANGS[currentLang].code;
+  rec.continuous=false;rec.interimResults=true;rec.maxAlternatives=3;
+
+  rec.onstart=()=>setQuizMicStatus('listening',QU().listening);
+  rec.onresult=e=>{
+    let finalText='',interimText='',hasFinal=false;
+    for(let i=0;i<e.results.length;i++){
+      if(e.results[i].isFinal){finalText+=e.results[i][0].transcript+' ';hasFinal=true;}
+      else interimText+=e.results[i][0].transcript;
+    }
+    if(interimText) setQuizMicStatus('interim','🔤 '+interimText);
+    if(hasFinal){stopQuizRec();processQuizAnswer(finalText.trim());}
+  };
+  rec.onerror=e=>{stopQuizRec();};
+  rec.onend=()=>{if(quizRecActive){quizRecActive=false;
+    document.getElementById('quizMicBtn').classList.remove('rec');
+    document.getElementById('quizMicBtn').textContent='🎤';
+    document.getElementById('quizMlbl').classList.remove('rec');
+    document.getElementById('quizMlbl').textContent=QU().micLabel;
+    setQuizMicStatus('idle',QU().idle);}};
+
+  quizRec=rec;rec.start();quizRecActive=true;
+  document.getElementById('quizMicBtn').classList.add('rec');
+  document.getElementById('quizMicBtn').textContent='⏹';
+  document.getElementById('quizMlbl').textContent=QU().micRec;
+  document.getElementById('quizMlbl').classList.add('rec');
+}
+
+function stopQuizRec(){
+  quizRecActive=false;
+  if(quizRec){try{quizRec.stop();}catch(e){}quizRec=null;}
+  document.getElementById('quizMicBtn').classList.remove('rec');
+  document.getElementById('quizMicBtn').textContent='🎤';
+  document.getElementById('quizMlbl').classList.remove('rec');
+  document.getElementById('quizMlbl').textContent=QU().micLabel;
+  if(!quizAnswered)setQuizMicStatus('idle',QU().idle);
+}
+
+function setQuizMicStatus(type,text){
+  document.getElementById('quizMicStatus').textContent=text;
+  document.getElementById('quizMicStatus').className='mic-status-text'+(type==='idle'?' idle':'');
+  document.getElementById('quizMicWave').classList.toggle('active',type!=='idle');
+}
+
+// ── QUIZ ANSWER PROCESSING ──────────────────────────────────────────
+function processQuizAnswer(spokenText){
+  if(quizAnswered)return;
+  const spoken=norm(spokenText).split(/\s+/).filter(Boolean);
+  const targetWords=quizWords.map(w=>norm(w));
+
+  // Match spoken words against target, reveal matches
+  let newReveals=0;
+  const usedSpoken=new Set();
+  targetWords.forEach((target,ti)=>{
+    if(quizRevealed[ti])return;
+    for(let si=0;si<spoken.length;si++){
+      if(!usedSpoken.has(si)&&wordMatches(spoken[si],target)){
+        quizRevealed[ti]=true;newReveals++;usedSpoken.add(si);break;
+      }
+    }
+  });
+
+  renderQuizAnswer(false);
+
+  // Check if fully correct
+  const allRevealed=quizRevealed.every(Boolean);
+  quizAttempt++;
+  document.getElementById('adot'+(quizAttempt-1)).className='adot '+(allRevealed?'correct':'used');
+
+  const banner=document.getElementById('quizResultBanner');
+  const wrap=document.getElementById('quizAnswerWrap');
+
+  if(allRevealed){
+    // Correct!
+    quizCorrect++;quizAnswered=true;
+    banner.textContent=QU().correct;
+    banner.className='quiz-result-banner show success';
+    wrap.classList.add('correct-flash');
+    document.getElementById('quizScoreLive').textContent=QU().score(quizCorrect,quizIdx+1);
+    document.getElementById('quizMicBtn').disabled=true;
+    document.getElementById('quizSkipBtn').textContent=QU().next;
+    setQuizMicStatus('idle','');
+    // Auto-advance after 1.5s
+    setTimeout(()=>quizNext(),1800);
+  } else if(quizAttempt>=2){
+    // 2nd attempt failed → show full answer
+    quizAnswered=true;
+    banner.textContent=QU().wrong;
+    banner.className='quiz-result-banner show fail';
+    wrap.classList.add('wrong-flash');
+    setTimeout(()=>renderQuizAnswer(true),400);
+    document.getElementById('quizMicBtn').disabled=true;
+    document.getElementById('quizSkipBtn').textContent=QU().next;
+    setQuizMicStatus('idle','');
+    setTimeout(()=>quizNext(),2800);
+  } else {
+    // 1st attempt failed, try again
+    setQuizMicStatus('idle',QU().idle);
+    // brief shake feedback
+    wrap.classList.add('wrong-flash');
+    setTimeout(()=>wrap.classList.remove('wrong-flash'),500);
+  }
+}
+
+function quizNext(){
+  stopQuizRec();
+  quizIdx++;
+  if(quizIdx>=quizItems.length){
+    showQuizScore();
+  }else{
+    loadQuizCard();
+  }
+}
+
+// ── QUIZ SCORE SCREEN ──────────────────────────────────────────────
+function showQuizScore(){
+  const qu=QU();
+  document.getElementById('quizCard').classList.add('hidden');
+  document.getElementById('quizScore').classList.remove('hidden');
+
+  const total=quizItems.length;
+  const pct=Math.round(quizCorrect/total*100);
+
+  // Animate conic gradient
+  const circle=document.getElementById('scoreCircle');
+  circle.style.setProperty('--score-pct','0%');
+  setTimeout(()=>circle.style.setProperty('--score-pct',pct+'%'),100);
+
+  document.getElementById('scoreNum').textContent=pct+'%';
+  document.getElementById('scoreLbl').textContent=`${quizCorrect}/${total}`;
+  document.getElementById('scoreGrade').textContent=qu.grade(pct);
+  document.getElementById('scoreMsg').textContent=qu.msg(quizCorrect,total);
+  document.getElementById('statCorrect').textContent=quizCorrect;
+  document.getElementById('statCorrectLbl').textContent=qu.statCorrect;
+  document.getElementById('statWrong').textContent=total-quizCorrect;
+  document.getElementById('statWrongLbl').textContent=qu.statWrong;
+  document.getElementById('quizDoneBtn').textContent=qu.doneBtn;
+
+  // Progress bar full
+  document.getElementById('quizPfill').style.width='100%';
+}
+
+// ── PATCH nextAction to trigger quiz after last sentence ────────────
+// Override the original nextAction
+const _origNextAction=nextAction;
+// We redefine nextAction below to intercept the final step
+
+// ── Init ──────────────────────────────────────────────────────────
 applyUI();
-// Auto-select translation lang (not same as practice lang)
 transLang=currentLang==='hu'?'en':'hu';
 updateTransLangBtns();
 </script>
